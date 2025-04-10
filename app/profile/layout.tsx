@@ -4,8 +4,8 @@ import Footer from "@/app/components/Footer";
 import "@/app/globals.css";
 
 export const metadata: Metadata = {
-  title: "post",
-  description: "post",
+  title: "Dormate - Profile",
+  description: "Manage your profile and account",
   icons: {
     icon: [
       {
@@ -16,18 +16,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default function ProfileLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`antialiased font-sans mt-16`}>
-        <Navbar />
+    <div className="mt-16">
+      <Navbar />
+      <main className="min-h-screen">
         {children}
-        <Footer />
-      </body>
-    </html>
+      </main>
+      <Footer />
+    </div>
   );
 }

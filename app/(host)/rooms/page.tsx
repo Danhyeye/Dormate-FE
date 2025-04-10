@@ -1,28 +1,25 @@
+'use client'
+
+import { useState } from "react"
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
 import Image from "next/image"
-
-import { z } from "zod"
-import { promises as fs } from "fs"
-import path from "path"
-import { taskSchema } from "./data/scheme"
-import { columns } from "./components/columns"
+import { useRooms } from "../../hooks/useRoom"
+import { RoomDataColumn } from "./components/columns"
 import { DataTable } from "./components/data-table"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { Skeleton } from "@/components/ui/skeleton"
 
-async function getTasks() {
-  const data = await fs.readFile(
-    path.join(process.cwd(), "app/(host)/rooms/data/tasks.json")
-  )
+export default function Page() {
+  const [pageSize, setPageSize] = useState(10);
+  const [pageIndex, setPageIndex] = useState(0);
+  
+  const { data, isLoading } = useRooms(pageSize, pageIndex);
+  
+  const rooms = data?.rooms || [];
+  const pagination = data?.pagination;
 
-  const tasks = JSON.parse(data.toString())
-
-  return z.array(taskSchema).parse(tasks)
-}
-
-export default async function Page() {
-  const tasks = await getTasks()
   return (
     <SidebarInset>
       <header className="group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 flex h-12 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear">
@@ -32,13 +29,12 @@ export default async function Page() {
             orientation="vertical"
             className="mx-2 data-[orientation=vertical]:h-4"
           />
-          <h1 className="text-base font-medium">Property Management</h1>
+          <h1 className="text-base font-medium">Room Management</h1>
         </div>
       </header>
       <div className="flex flex-1 flex-col">
         <div className="@container/main flex flex-1 flex-col gap-2">
           <div className="flex flex-col gap-4 py-1 md:gap-6 md:py-2">
-
             <div className="md:hidden">
               <Image
                 src="/examples/tasks-light.png"
@@ -55,25 +51,61 @@ export default async function Page() {
                 className="hidden dark:block"
               />
             </div>
-            <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
+            <div className="h-full flex-1 flex-col space-y-8 p-8 md:flex">
               <div className="flex items-center justify-between space-y-2">
                 <div>
-                  <h2 className="text-2xl font-bold tracking-tight">Property Management</h2>
+                  <h2 className="text-2xl font-bold tracking-tight">Room Management</h2>
                   <p className="text-muted-foreground">
-                    Here&apos;s a list of properties!
+                    Here&apos;s a list of rooms!
                   </p>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Link href={"/property/new"}><Button>Add new property</Button></Link>
+                  <Link href={"/rooms/new"}><Button>Add new room</Button></Link>
                 </div>
               </div>
-              <DataTable data={tasks} columns={columns} />
+              {isLoading ? (
+                <div className="space-y-4">
+                  {/* Table header skeleton */}
+                  <div className="flex items-center justify-between p-4 border rounded-md">
+                    <Skeleton className="h-9 w-[250px]" />
+                    <Skeleton className="h-9 w-[200px]" />
+                  </div>
+                  
+                  {/* Table rows skeleton */}
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <div key={index} className="flex items-center justify-between p-4 border rounded-md">
+                      <div className="flex items-center space-x-4">
+                        <Skeleton className="h-12 w-12 rounded-md" />
+                        <div className="space-y-2">
+                          <Skeleton className="h-4 w-[200px]" />
+                          <Skeleton className="h-4 w-[150px]" />
+                        </div>
+                      </div>
+                      <div className="flex space-x-2">
+                        <Skeleton className="h-9 w-9 rounded-md" />
+                        <Skeleton className="h-9 w-9 rounded-md" />
+                        <Skeleton className="h-9 w-9 rounded-md" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <DataTable 
+                  data={rooms} 
+                  columns={RoomDataColumn} 
+                  initialPageSize={pageSize}
+                  initialPageIndex={pageIndex}
+                  pageCount={pagination ? Math.ceil(pagination.total / pagination.perPage) : 0}
+                  onPaginationChange={(updatedPagination: { pageIndex: number; pageSize: number }) => {
+                    setPageSize(updatedPagination.pageSize);
+                    setPageIndex(updatedPagination.pageIndex);
+                  }}
+                />
+              )}
             </div>
-
           </div>
         </div>
       </div>
     </SidebarInset>
-
   )
 }

@@ -16,7 +16,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 
-import { Room } from "../../../types/room"
+import { Post } from "../../../types/post"
 import {
   Table,
   TableBody,
@@ -25,13 +25,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-
 import { DataTablePagination } from "./data-table-pagination"
 import { DataTableToolbar } from "./data-table-toolbar"
 
 interface DataTableProps {
-  columns: ColumnDef<Room>[]
-  data: Room[]
+  columns: ColumnDef<Post>[]
+  data: Post[]
   initialPageSize?: number
   initialPageIndex?: number
   pageCount?: number
@@ -147,4 +146,4 @@ export function DataTable({
       <DataTablePagination table={table} />
     </div>
   )
-}
+} 

@@ -4,8 +4,8 @@ import Footer from "@/app/components/Footer";
 import "@/app/globals.css";
 
 export const metadata: Metadata = {
-  title: "Đổi mật khẩu",
-  description: "Đổi mật khẩu",
+  title: "Dormate - Change Password",
+  description: "Update your password securely",
   icons: {
     icon: [
       {
@@ -16,18 +16,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default function ChangePasswordLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`antialiased font-sans`}>
-        <Navbar />
+    <div className="mt-16">
+      <Navbar />
+      <main className="min-h-screen">
         {children}
-        <Footer />
-      </body>
-    </html>
+      </main>
+      <Footer />
+    </div>
   );
 }

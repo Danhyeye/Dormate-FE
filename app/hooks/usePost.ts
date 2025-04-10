@@ -1,7 +1,10 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { 
   getPostById, 
-  fetchPosts
+  fetchPosts,
+  createPost,
+  updatePost,
+  deletePost
 } from '@/app/services/RequestManager';
 import { PostSearchParams } from '@/app/types/post';
 
@@ -9,15 +12,22 @@ import { PostSearchParams } from '@/app/types/post';
 export const postKeys = {
   all: ['posts'] as const,
   lists: () => [...postKeys.all, 'list'] as const,
-  list: (filters: PostSearchParams) => [...postKeys.lists(), filters] as const,
+  list: () => [...postKeys.lists()] as const,
   details: () => [...postKeys.all, 'detail'] as const,
   detail: (id: string) => [...postKeys.details(), id] as const,
 };
 
 // Get all posts with optional filters
-export const usePosts = (searchParams?: PostSearchParams) => {
+export const usePosts = (perPage: number = 10, currentPage: number = 0) => {
+  const searchParams: PostSearchParams = {
+    defaultSearch: {
+      perPage,
+      currentPage
+    }
+  };
+  
   return useQuery({
-    queryKey: postKeys.list(searchParams || {}),
+    queryKey: [...postKeys.list(), perPage, currentPage],
     queryFn: () => fetchPosts(searchParams),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
@@ -30,6 +40,44 @@ export const usePostDetail = (id: string) => {
     queryFn: () => getPostById(id),
     staleTime: 1000 * 60 * 5, // 5 minutes
     enabled: !!id, // Only run the query if we have an ID
+  });
+};
+
+// Create a new post
+export const useCreatePost = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createPost,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: postKeys.list() });
+    },
+  });
+};
+
+// Update an existing post
+export const useUpdatePost = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updatePost,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: postKeys.list() });
+      queryClient.setQueryData(postKeys.detail(data.id), data);
+    },
+  });
+};
+
+// Delete a post
+export const useDeletePost = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deletePost,
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries({ queryKey: postKeys.list() });
+      queryClient.removeQueries({ queryKey: postKeys.detail(id) });
+    },
   });
 };
 

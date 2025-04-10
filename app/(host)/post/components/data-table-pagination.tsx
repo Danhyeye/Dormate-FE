@@ -1,7 +1,13 @@
 "use client"
 
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight
+} from "lucide-react"
 import { Table } from "@tanstack/react-table"
-import { Room } from "../../../types/room"
+
 import { Button } from "@/components/ui/button"
 import {
   Select,
@@ -10,15 +16,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-} from "lucide-react"
+import { Post } from "../../../types/post"
 
 interface DataTablePaginationProps {
-  table: Table<Room>
+  table: Table<Post>
 }
 
 export function DataTablePagination({ table }: DataTablePaginationProps) {
@@ -94,4 +95,4 @@ export function DataTablePagination({ table }: DataTablePaginationProps) {
       </div>
     </div>
   )
-}
+} 

@@ -1,5 +1,4 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
 import { 
   Profile, 
   ProfileResponse, 
@@ -7,9 +6,12 @@ import {
   ChangePasswordRequest,
   ProfileUpdateResponse 
 } from '@/app/types/profile';
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-const API_PROFILE_URL = `${API_BASE_URL}/profile`;
+import {
+  getProfile,
+  updateProfile,
+  updateProfileWithAvatar,
+  changePassword
+} from '@/app/services/RequestManager';
 
 // Query keys
 export const profileKeys = {
@@ -22,23 +24,10 @@ export const profileKeys = {
 export const useProfile = () => {
   return useQuery<ProfileResponse, Error>({
     queryKey: profileKeys.details(),
-    queryFn: async () => {
-      const token = localStorage.getItem('accessToken');
-      if (!token) {
-        throw new Error('No authentication token found');
-      }
-      
-      const response = await axios.get<ProfileResponse>(API_PROFILE_URL, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      
-      return response.data;
-    },
+    queryFn: getProfile,
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: false,
-    enabled: !!localStorage.getItem('accessToken')
+    enabled: typeof window !== 'undefined' && !!localStorage.getItem('accessToken')
   });
 };
 
@@ -47,25 +36,29 @@ export const useUpdateProfile = () => {
   const queryClient = useQueryClient();
   
   return useMutation<ProfileUpdateResponse, Error, UpdateProfileRequest>({
-    mutationFn: async (profileData) => {
-      const token = localStorage.getItem('accessToken');
-      if (!token) {
-        throw new Error('No authentication token found');
-      }
-      
-      const response = await axios.put<ProfileUpdateResponse>(API_PROFILE_URL, profileData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      return response.data;
-    },
+    mutationFn: updateProfile,
     onSuccess: () => {
-      // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: profileKeys.details() });
     }
+  });
+};
+
+// Update user profile with avatar
+export const useUpdateProfileWithAvatar = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation<ProfileUpdateResponse, Error, FormData>({
+    mutationFn: updateProfileWithAvatar,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: profileKeys.details() });
+    }
+  });
+};
+
+// Change password
+export const useChangePassword = () => {
+  return useMutation<{status: string, message: string}, Error, ChangePasswordRequest>({
+    mutationFn: (data) => changePassword(data.currentPassword, data.newPassword, data.confirmPassword)
   });
 };
 

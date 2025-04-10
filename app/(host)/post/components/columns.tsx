@@ -1,7 +1,7 @@
-"use client"
+ "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
-import { Room, RoomStatus } from "../../../types/room"
+import { Post } from "../../../types/post"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
@@ -15,32 +15,40 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useState } from "react"
-import { RoomDialog } from "./room-dialog"
+import { formatCurrency } from "@/app/services/RequestManager"
 
-const getStatusBadgeVariant = (status: RoomStatus): "outline" | "destructive" | "default" | "secondary" => {
+const getStatusBadgeVariant = (status: number): "outline" | "destructive" | "default" | "secondary" => {
   switch (status) {
-    case RoomStatus.Pending:
+    case 0: // Pending
       return "outline"
-    case RoomStatus.Approved:
+    case 1: // Approved
       return "default"
-    case RoomStatus.Rejected:
+    case 2: // Rejected
       return "destructive"
-    case RoomStatus.Available:
+    case 3: // Available
       return "default"
-    case RoomStatus.Rented:
+    case 4: // Rented
       return "secondary"
-    case RoomStatus.Hide:
+    case 5: // Hide
       return "outline"
     default:
       return "secondary"
   }
 }
 
-const getStatusLabel = (status: RoomStatus): string => {
-  return RoomStatus[status]
+const getStatusLabel = (status: number): string => {
+  const statusMap = {
+    0: "Pending",
+    1: "Approved",
+    2: "Rejected",
+    3: "Available",
+    4: "Rented",
+    5: "Hide"
+  }
+  return statusMap[status as keyof typeof statusMap] || "Unknown"
 }
 
-export const RoomDataColumn: ColumnDef<Room>[] = [
+export const PostDataColumn: ColumnDef<Post>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -94,12 +102,7 @@ export const RoomDataColumn: ColumnDef<Room>[] = [
     },
     cell: ({ row }) => {
       const price = row.getValue("price") as number
-      const formatted = new Intl.NumberFormat("vi-VN", {
-        style: "currency",
-        currency: "VND",
-      }).format(price)
-
-      return <div className="font-medium">{formatted}</div>
+      return <div className="font-medium">{formatCurrency(price)}</div>
     },
   },
   {
@@ -152,7 +155,7 @@ export const RoomDataColumn: ColumnDef<Room>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      const status = row.getValue("status") as RoomStatus
+      const status = row.getValue("status") as number
       return (
         <Badge variant={getStatusBadgeVariant(status)}>
           {getStatusLabel(status)}
@@ -163,8 +166,7 @@ export const RoomDataColumn: ColumnDef<Room>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const room = row.original
-      const [isDialogOpen, setIsDialogOpen] = useState(false)
+      const post = row.original
 
       return (
         <>
@@ -178,22 +180,15 @@ export const RoomDataColumn: ColumnDef<Room>[] = [
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(room.id)}
+                onClick={() => navigator.clipboard.writeText(post.id)}
               >
-                Copy room ID
+                Copy post ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => setIsDialogOpen(true)}>
-                View details
-              </DropdownMenuItem>
-              <DropdownMenuItem>Edit room</DropdownMenuItem>
+              <DropdownMenuItem>View details</DropdownMenuItem>
+              <DropdownMenuItem>Edit post</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <RoomDialog 
-            room={room} 
-            open={isDialogOpen} 
-            onOpenChange={setIsDialogOpen} 
-          />
         </>
       )
     },

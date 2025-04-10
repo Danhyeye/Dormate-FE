@@ -3,27 +3,13 @@
 import * as React from "react"
 import {
   ArrowUpCircleIcon,
-  BarChartIcon,
   CameraIcon,
-  ClipboardListIcon,
-  DatabaseIcon,
   FileCodeIcon,
-  FileIcon,
   FileTextIcon,
-  FolderIcon,
-  HandCoins,
   HelpCircleIcon,
   House,
-  LayoutDashboardIcon,
-  ListIcon,
-  ListTodo,
-  SearchIcon,
   SettingsIcon,
-  Users,
-  UsersIcon,
 } from "lucide-react"
-
-import { NavDocuments } from "@/components/nav-documents"
 import { NavMain } from "@/components/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
@@ -119,7 +105,7 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="offcanvas" {...props} className="z-10 bg-red-200">
+    <Sidebar collapsible="offcanvas" {...props} className="z-10 bg-white">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -129,7 +115,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             >
               <a href="#">
                 <ArrowUpCircleIcon className="h-5 w-5" />
-                <span className="text-base font-semibold">Dormate Inc.</span>
+                <span className="text-base font-semibold">Dormate</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

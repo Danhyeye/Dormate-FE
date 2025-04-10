@@ -120,8 +120,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Enable additional optimizations
-  swcMinify: true,
+  devIndicators: false,
   poweredByHeader: false,
   compress: true,
 };

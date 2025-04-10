@@ -1,14 +1,15 @@
 "use client"
 
+import { X } from "lucide-react"
 import { Table } from "@tanstack/react-table"
-import { Room } from "../../../types/room"
+
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Post } from "../../../types/post"
 import { DataTableViewOptions } from "./data-table-view-options"
-import { X } from "lucide-react"
 
 interface DataTableToolbarProps {
-  table: Table<Room>
+  table: Table<Post>
 }
 
 export function DataTableToolbar({ table }: DataTableToolbarProps) {
@@ -18,7 +19,7 @@ export function DataTableToolbar({ table }: DataTableToolbarProps) {
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
         <Input
-          placeholder="Filter rooms..."
+          placeholder="Filter posts..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
@@ -39,4 +40,4 @@ export function DataTableToolbar({ table }: DataTableToolbarProps) {
       <DataTableViewOptions table={table} />
     </div>
   )
-}
+} 

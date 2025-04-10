@@ -2,7 +2,9 @@ import axios from "axios";
 import { format, toZonedTime } from "date-fns-tz";
 import { vi } from "date-fns/locale";
 import { SignInRequest, SignInResponse, ForgotPasswordResponse } from "../types/auth";
-import { Post, PostApiResponse, PostListResponse, PostSearchParams } from "../types/post";
+import { Post, PostApiResponse, PostListResponse, PostSearchParams, CreatePostRequest, UpdatePostRequest } from "../types/post";
+import { Room, RoomResponse, CreateRoomRequest, UpdateRoomRequest } from "../types/room";
+import { Profile, ProfileResponse, UpdateProfileRequest, ProfileUpdateResponse } from "../types/profile";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const API_URL_ROOMS = `${API_BASE_URL}/rooms`;
@@ -11,8 +13,6 @@ const API_URL_PROFILE = `${API_BASE_URL}/profile`;
 const API_URL_BOOKINGS = `${API_BASE_URL}/bookings`;
 const API_URL_POSTS = `${API_BASE_URL}/posts`;
 const timeZone = process.env.TIMEZONE || "UTC";
-
-
 
 export const slugify = (text: string): string => {
   return text
@@ -29,15 +29,6 @@ export function formatDateTime(date: Date | string, formatString: string) {
   return format(zonedDate, formatString, { timeZone, locale: vi });
 }
 
-
-
-// export function formatCurrency(amount: number): string {
-//   return new Intl.NumberFormat("vi-VN", {
-//     style: "currency",
-//     currency: "VND",
-//   }).format(amount);
-// }
-
 export const formatCurrency = (amount: number | undefined): string => {
   if (amount === undefined) return "0 ₫";
   return new Intl.NumberFormat("vi-VN", {
@@ -46,7 +37,7 @@ export const formatCurrency = (amount: number | undefined): string => {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(amount);
-}; 
+};
 
 interface RoomAPIResponse {
   _id: string;
@@ -63,9 +54,6 @@ interface RoomAPIResponse {
   createdAt: Date;
   updatedAt: Date;
 }
-
-
-
 
 export const login = async (userName: string, password: string): Promise<{ 
   success: boolean; 
@@ -94,29 +82,22 @@ export const login = async (userName: string, password: string): Promise<{
 
     const response = await axios.post<SignInResponse>(`${API_URL_AUTH}/signIn`, signInData);
     
-
-    // Check explicitly for success field, not just HTTP status
     if (response.data && response.data.data?.accessToken) {
       const accessToken = response.data.data.accessToken;
       
-      // Extract role from token
       const role = extractRoleFromToken(accessToken);
       
-      // Store accessToken
       localStorage.setItem("accessToken", accessToken);
       
-      // Store refreshToken if available
       if (response.data.data.refreshToken) {
         localStorage.setItem("refreshToken", response.data.data.refreshToken);
       }
 
-      // Extract and store userId
       const userId = response.data.data.user?.id || extractUserIdFromToken(accessToken);
       if (userId) {
         localStorage.setItem("userId", userId);
       }
       
-      // Extract and store fullname from token or user object
       let fullname: string | undefined = response.data.data.user?.fullName;
       if (!fullname) {
         const nameFromToken = extractNameFromToken(accessToken);
@@ -125,8 +106,6 @@ export const login = async (userName: string, password: string): Promise<{
         }
       }
 
-      
-      
       if (fullname) {
         localStorage.setItem("fullname", fullname);
       }
@@ -143,7 +122,6 @@ export const login = async (userName: string, password: string): Promise<{
       };
     }
 
-    // If we reach here, it means we got a 200 OK but no proper data
     console.log("Login failed: No proper data in response");
     return { 
       success: false, 
@@ -151,14 +129,12 @@ export const login = async (userName: string, password: string): Promise<{
     };
   } catch (error: any) {
     console.error("Error during login:", error);
-    // Handle API error responses
     if (error.response && error.response.data) {
       return { 
         success: false, 
         message: error.response.data.message || "Sai tên đăng nhập hoặc mật khẩu" 
       };
     }
-    // Handle network or other errors
     return { 
       success: false, 
       message: "Không thể kết nối đến máy chủ. Vui lòng thử lại sau." 
@@ -166,16 +142,11 @@ export const login = async (userName: string, password: string): Promise<{
   }
 };
 
-// Helper function to extract userId from JWT token
 function extractUserIdFromToken(token: string): string | null {
   try {
-    // Get the payload part of the token (second part)
     const payload = token.split('.')[1];
-    // Decode the base64 string
     const decodedPayload = atob(payload);
-    // Parse the JSON
     const claims = JSON.parse(decodedPayload);
-    // Return the userId from claims
     return claims.userId || claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata"] || null;
   } catch (error) {
     console.error("Error extracting userId from token:", error);
@@ -183,16 +154,11 @@ function extractUserIdFromToken(token: string): string | null {
   }
 }
 
-// Helper function to extract name from JWT token
 function extractNameFromToken(token: string): string | null {
   try {
-    // Get the payload part of the token (second part)
     const payload = token.split('.')[1];
-    // Decode the base64 string
     const decodedPayload = atob(payload);
-    // Parse the JSON
     const claims = JSON.parse(decodedPayload);
-    // Return the name from claims
     return claims["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"] || null;
   } catch (error) {
     console.error("Error extracting name from token:", error);
@@ -202,13 +168,9 @@ function extractNameFromToken(token: string): string | null {
 
 function extractRoleFromToken(token: string): string | undefined {
   try {
-    // Get the payload part of the token (second part)
     const payload = token.split('.')[1];
-    // Decode the base64 string
     const decodedPayload = atob(payload);
-    // Parse the JSON
     const claims = JSON.parse(decodedPayload);
-    // Return the role from claims
     return claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] || undefined;
   } catch (error) {
     console.error("Error extracting role from token:", error);
@@ -289,15 +251,12 @@ export const forgotPassword = async (email: string): Promise<ForgotPasswordRespo
   }
 };
 
-// Fetch posts with search params
 export const fetchPosts = async (searchParams?: PostSearchParams): Promise<{posts: Post[], pagination?: {total: number, perPage: number, currentPage: number}}> => {
   try {
-    let url = `${API_URL_POSTS}`; // Base URL
+    let url = `${API_URL_POSTS}`;
 
-    // Start with query parameters
     const queryParams: string[] = [];
     
-    // Add search parameters if provided
     if (searchParams) {
       if (searchParams.id) queryParams.push(`id=${searchParams.id}`);
       if (searchParams.name) queryParams.push(`name=${searchParams.name}`);
@@ -314,7 +273,6 @@ export const fetchPosts = async (searchParams?: PostSearchParams): Promise<{post
       }
     }
     
-    // Add query parameters to URL if any exist
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
@@ -340,7 +298,6 @@ export const fetchPosts = async (searchParams?: PostSearchParams): Promise<{post
   }
 };
 
-// Fetch a single post by ID
 export interface PostDetailResponse {
   data: Post;
   status: string;
@@ -365,6 +322,358 @@ export const getPostById = async (id: string): Promise<PostDetailResponse | null
   } catch (error) {
     console.error("Error fetching post by ID:", error);
     return null;
+  }
+};
+
+export const fetchRooms = async (perPage: number = 10, currentPage: number = 0): Promise<{rooms: Room[], pagination?: {total: number, perPage: number, currentPage: number}}> => {
+  try {
+    const url = `${API_URL_ROOMS}?defaultSearch.perPage=${perPage}&defaultSearch.currentPage=${currentPage}`;
+    console.log(`Fetching rooms with pagination: ${url}`);
+    
+    const response = await axios.get<RoomResponse>(url);
+    if (response.data.status === "Success" && response.data.data?.rooms) {
+      return {
+        rooms: response.data.data.rooms,
+        pagination: response.data.data.pagination || {
+          total: response.data.data.rooms.length,
+          perPage,
+          currentPage
+        }
+      };
+    }
+    return { rooms: [] };
+  } catch (error) {
+    console.error("Error fetching rooms:", error);
+    return { rooms: [] };
+  }
+};
+
+export const getRoomById = async (id: string): Promise<Room | null> => {
+  try {
+    const response = await axios.get<RoomResponse>(`${API_URL_ROOMS}/${id}`);
+    if (response.data.status === "Success" && response.data.data?.room) {
+      return response.data.data.room;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error fetching room by ID:", error);
+    return null;
+  }
+};
+
+export const createRoom = async (roomData: CreateRoomRequest): Promise<Room> => {
+  const formData = new FormData();
+  
+  console.log("Creating room with data:", roomData);
+  
+  // Map properties to the expected capitalized format
+  const fieldMapping: Record<string, string> = {
+    name: "Name",
+    description: "Description",
+    price: "Price",
+    area: "Area",
+    province: "Province",
+    district: "District",
+    ward: "Ward",
+    address: "Address",
+    status: "Status",
+    packageId: "PackageId",
+    availableFrom: "ValidateFrom",
+    availableTo: "ValidateTo",
+    isHide: "IsHide"
+  };
+  
+  // Handle special fields
+  Object.entries(roomData).forEach(([key, value]) => {
+    if (key !== "mainPicture" && key !== "subImage" && value !== undefined) {
+      const apiFieldName = fieldMapping[key] || key;
+      
+      // Format dates properly for the API
+      if (value instanceof Date) {
+        formData.append(apiFieldName, value.toISOString());
+        console.log(`Added form date field: ${apiFieldName} = ${value.toISOString()}`);
+      } else {
+        formData.append(apiFieldName, value.toString());
+        console.log(`Added form field: ${apiFieldName} = ${value}`);
+      }
+    }
+  });
+
+  if (roomData.mainPicture) {
+    formData.append("MainPicture", roomData.mainPicture);
+    console.log("Added MainPicture:", roomData.mainPicture.name);
+  }
+
+  if (roomData.subImage && roomData.subImage.length > 0) {
+    roomData.subImage.forEach((file: File) => {
+      formData.append("SubPicture", file);
+      console.log(`Added SubPicture:`, file.name);
+    });
+  }
+
+  const token = localStorage.getItem("accessToken");
+  console.log("Using token:", token ? "Bearer token found" : "No token available");
+  
+  try {
+    // Log the URL we're calling
+    console.log(`Calling API at: ${API_URL_ROOMS}`);
+    
+    const response = await axios.post<RoomResponse>(`${API_URL_ROOMS}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        "Authorization": token ? `Bearer ${token}` : "",
+      },
+    });
+
+    console.log("API Response:", response.data);
+
+    // If the response status is Success, consider it successful even if data.room is null
+    if (response.data.status === "Success") {
+      if (response.data.data?.room) {
+        return response.data.data.room;
+      } else {
+        // For cases where the room is created but not returned in the response
+        console.log("Room created successfully, but room data not returned in response");
+        // Return a partial room object with the data we have
+        return {
+          id: "",  // We don't have the ID yet
+          name: roomData.name,
+          description: roomData.description,
+          price: roomData.price,
+          area: roomData.area,
+          province: roomData.province,
+          district: roomData.district,
+          ward: roomData.ward,
+          address: roomData.address,
+          status: roomData.status,
+          mainPicture: "",  // We don't have the URL yet
+          subImage: [],
+          ownerId: "",  // We don't have this yet
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          availableFrom: roomData.availableFrom,
+          availableTo: roomData.availableTo
+        };
+      }
+    }
+    
+    console.error("API returned unsuccessful response:", response.data);
+    throw new Error("Failed to create room: " + (response.data.message || "Unknown error"));
+  } catch (error: any) {
+    console.error("Error creating room:", error.response?.data || error.message);
+    throw error; // Keep the original error for better debugging
+  }
+};
+
+export const updateRoom = async (roomData: UpdateRoomRequest): Promise<Room> => {
+  const formData = new FormData();
+  
+  Object.entries(roomData).forEach(([key, value]) => {
+    if (key !== "mainPicture" && key !== "subImage" && value !== undefined) {
+      formData.append(key, value.toString());
+    }
+  });
+
+  if (roomData.mainPicture) {
+    formData.append("mainPicture", roomData.mainPicture);
+  }
+
+  if (roomData.subImage) {
+    roomData.subImage.forEach((file: File, index: number) => {
+      formData.append(`subImage[${index}]`, file);
+    });
+  }
+
+  const response = await axios.put<RoomResponse>(`${API_URL_ROOMS}/${roomData.id}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  if (response.data.status === "Success" && response.data.data?.room) {
+    return response.data.data.room;
+  }
+  throw new Error("Failed to update room");
+};
+
+export const deleteRoom = async (id: string): Promise<void> => {
+  const response = await axios.delete(`${API_URL_ROOMS}/${id}`);
+  if (response.data.status !== "Success") {
+    throw new Error("Failed to delete room");
+  }
+};
+
+export const createPost = async (postData: CreatePostRequest): Promise<Post> => {
+  const formData = new FormData();
+  
+  Object.entries(postData).forEach(([key, value]) => {
+    if (key !== "mainPicture" && key !== "subImage" && value !== undefined && value !== null) {
+      formData.append(key, value.toString());
+    }
+  });
+
+  if (postData.mainPicture) {
+    formData.append("mainPicture", postData.mainPicture);
+  }
+
+  if (postData.subImage) {
+    postData.subImage.forEach((file: File, index: number) => {
+      formData.append(`subImage[${index}]`, file);
+    });
+  }
+
+  const response = await axios.post<PostApiResponse>(`${API_URL_POSTS}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  if (response.data.status === "Success") {
+    return response.data as unknown as Post;
+  }
+  throw new Error("Failed to create post");
+};
+
+export const updatePost = async (postData: UpdatePostRequest): Promise<Post> => {
+  const formData = new FormData();
+  
+  Object.entries(postData).forEach(([key, value]) => {
+    if (key !== "mainPicture" && key !== "subImage" && value !== undefined && value !== null) {
+      formData.append(key, value.toString());
+    }
+  });
+
+  if (postData.mainPicture) {
+    formData.append("mainPicture", postData.mainPicture);
+  }
+
+  if (postData.subImage) {
+    postData.subImage.forEach((file: File, index: number) => {
+      formData.append(`subImage[${index}]`, file);
+    });
+  }
+
+  const response = await axios.put<PostApiResponse>(`${API_URL_POSTS}/${postData.id}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  if (response.data.status === "Success") {
+    return response.data as unknown as Post;
+  }
+  throw new Error("Failed to update post");
+};
+
+export const deletePost = async (id: string): Promise<void> => {
+  const response = await axios.delete(`${API_URL_POSTS}/${id}`);
+  if (response.data.status !== "Success") {
+    throw new Error("Failed to delete post");
+  }
+};
+
+export const getProfile = async (): Promise<ProfileResponse> => {
+  try {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("No authentication token found");
+    }
+    
+    const response = await axios.get<ProfileResponse>(API_URL_PROFILE, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    
+    return response.data;
+  } catch (error: any) {
+    console.error("Error fetching profile:", error);
+    return {
+      status: "error",
+      data: null,
+      message: error.response?.data?.message || "Failed to fetch profile"
+    };
+  }
+};
+
+export const updateProfile = async (profileData: UpdateProfileRequest): Promise<ProfileUpdateResponse> => {
+  try {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("No authentication token found");
+    }
+    
+    const response = await axios.put<ProfileUpdateResponse>(API_URL_PROFILE, profileData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
+    
+    return response.data;
+  } catch (error: any) {
+    console.error("Error updating profile:", error);
+    return {
+      status: "error",
+      data: null,
+      message: error.response?.data?.message || "Failed to update profile"
+    };
+  }
+};
+
+export const updateProfileWithAvatar = async (profileData: FormData): Promise<ProfileUpdateResponse> => {
+  try {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("No authentication token found");
+    }
+    
+    const response = await axios.put<ProfileUpdateResponse>(`${API_URL_PROFILE}/avatar`, profileData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data"
+      }
+    });
+    
+    return response.data;
+  } catch (error: any) {
+    console.error("Error updating profile with avatar:", error);
+    return {
+      status: "error",
+      data: null,
+      message: error.response?.data?.message || "Failed to update profile avatar"
+    };
+  }
+};
+
+export const changePassword = async (currentPassword: string, newPassword: string, confirmPassword: string): Promise<{status: string, message: string}> => {
+  try {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("No authentication token found");
+    }
+    
+    const response = await axios.post(`${API_URL_PROFILE}/change-password`, {
+      currentPassword,
+      newPassword,
+      confirmPassword
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
+    
+    return {
+      status: "success",
+      message: response.data.message || "Password changed successfully"
+    };
+  } catch (error: any) {
+    console.error("Error changing password:", error);
+    return {
+      status: "error",
+      message: error.response?.data?.message || "Failed to change password"
+    };
   }
 };
 

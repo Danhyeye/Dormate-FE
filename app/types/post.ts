@@ -82,4 +82,24 @@ export interface PostListResponse {
     };
   };
   message: string;
+}
+
+export interface CreatePostRequest {
+  name: string;
+  description: string;
+  province: string;
+  district: string;
+  ward: string;
+  address: string;
+  note?: string;
+  area: number;
+  price: number;
+  mainPicture?: File;
+  subImage?: File[];
+  status?: number;
+  isHide?: boolean;
+}
+
+export interface UpdatePostRequest extends CreatePostRequest {
+  id: string;
 } 
