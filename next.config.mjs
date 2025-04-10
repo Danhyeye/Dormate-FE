@@ -123,7 +123,7 @@ const nextConfig = {
   devIndicators: false,
   poweredByHeader: false,
   compress: true,
-  output: 'export',
+  output: 'standalone',
 };
 
 export default nextConfig;
