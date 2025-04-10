@@ -123,6 +123,7 @@ const nextConfig = {
   devIndicators: false,
   poweredByHeader: false,
   compress: true,
+  output: 'export',
 };
 
 export default nextConfig;
