@@ -3,8 +3,11 @@
 import { useSearchParams } from "next/navigation";
 import Posts from "@/app/components/posts/Post";
 import { PostSearchParams } from "@/app/types/post";
+import { Suspense } from "react";
+import LoadingState from "@/app/components/posts/components/LoadingState";
 
-export default function PostsPage() {
+// Client-side only component to handle useSearchParams
+function PostsContent() {
   const searchParams = useSearchParams();
   
   // Parse search parameters from the URL
@@ -41,9 +44,15 @@ export default function PostsPage() {
     }
   }
   
+  return <Posts initialSearchParams={initialSearchParams} />;
+}
+
+export default function PostsPage() {
   return (
     <div className="container mx-auto">
-      <Posts initialSearchParams={initialSearchParams} />
+      <Suspense fallback={<LoadingState />}>
+        <PostsContent />
+      </Suspense>
     </div>
   );
 }

@@ -6,11 +6,12 @@ import { Post, PostApiResponse, PostListResponse, PostSearchParams, CreatePostRe
 import { Room, RoomResponse, CreateRoomRequest, UpdateRoomRequest } from "../types/room";
 import { Profile, ProfileResponse, UpdateProfileRequest, ProfileUpdateResponse } from "../types/profile";
 
+export type { Room } from "../types/room";
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const API_URL_ROOMS = `${API_BASE_URL}/rooms`;
 const API_URL_AUTH = `${API_BASE_URL}/auth`;
 const API_URL_PROFILE = `${API_BASE_URL}/profile`;
-const API_URL_BOOKINGS = `${API_BASE_URL}/bookings`;
 const API_URL_POSTS = `${API_BASE_URL}/posts`;
 const timeZone = process.env.TIMEZONE || "UTC";
 
@@ -676,6 +677,7 @@ export const changePassword = async (currentPassword: string, newPassword: strin
     };
   }
 };
+
 
 
 

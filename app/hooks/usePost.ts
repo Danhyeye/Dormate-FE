@@ -18,16 +18,24 @@ export const postKeys = {
 };
 
 // Get all posts with optional filters
-export const usePosts = (perPage: number = 10, currentPage: number = 0) => {
-  const searchParams: PostSearchParams = {
-    defaultSearch: {
-      perPage,
-      currentPage
-    }
-  };
+export const usePosts = (paginationOrParams: number | PostSearchParams, currentPage?: number) => {
+  let searchParams: PostSearchParams;
+  
+  // Check if the first parameter is a PostSearchParams object
+  if (typeof paginationOrParams === 'object') {
+    searchParams = paginationOrParams;
+  } else {
+    // If not, treat it as perPage number
+    searchParams = {
+      defaultSearch: {
+        perPage: paginationOrParams,
+        currentPage: currentPage || 0
+      }
+    };
+  }
   
   return useQuery({
-    queryKey: [...postKeys.list(), perPage, currentPage],
+    queryKey: [...postKeys.list(), searchParams],
     queryFn: () => fetchPosts(searchParams),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
