@@ -120,7 +120,6 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  devIndicators: false,
   poweredByHeader: false,
   compress: true,
 };
