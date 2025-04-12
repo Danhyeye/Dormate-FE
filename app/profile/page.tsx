@@ -1,26 +1,40 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useProfile } from "@/app/hooks/useProfile";
-import ProfileForm from "@/app/components/profile/ProfileForm";
 import ProfileLoadingState from "@/app/components/profile/LoadingState";
+import dynamic from "next/dynamic";
+
+// Dynamically import ProfileForm with SSR disabled
+const ProfileForm = dynamic(
+  () => import("@/app/components/profile/ProfileForm"),
+  { ssr: false }
+);
 
 export default function ProfilePage() {
   const router = useRouter();
   const { data: profileResponse, isLoading, isError, error } = useProfile();
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Set client-side flag
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Redirect to login if not authenticated
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-      router.push("/login");
+    if (isMounted) {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        router.push("/login");
+      }
     }
-  }, [router]);
+  }, [router, isMounted]);
 
   // Show loading state
-  if (isLoading) {
+  if (isLoading || !isMounted) {
     return <ProfileLoadingState />;
   }
 
@@ -55,8 +69,6 @@ export default function ProfilePage() {
         <TabsContent value="profile">
           <ProfileForm profile={profile} />
         </TabsContent>
-        
-       
       </Tabs>
     </div>
   );

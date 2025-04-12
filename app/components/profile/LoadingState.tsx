@@ -1,8 +1,17 @@
+"use client";
+
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState, useEffect } from "react";
 
 export default function ProfileLoadingState() {
+  const [isMounted, setIsMounted] = useState(false);
+  
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <div className="mb-8">
@@ -11,10 +20,13 @@ export default function ProfileLoadingState() {
       </div>
 
       <Tabs defaultValue="profile" className="w-full">
-        <TabsList className="mb-6">
-          <Skeleton className="h-10 w-32 mr-1" />
-          <Skeleton className="h-10 w-40" />
-        </TabsList>
+        <div className="mb-6">
+          <TabsList>
+            <TabsTrigger value="profile" disabled>
+              <Skeleton className="h-4 w-24" />
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         {/* Profile Tab */}
         <TabsContent value="profile" className="space-y-6">
@@ -52,26 +64,6 @@ export default function ProfileLoadingState() {
           <div className="flex justify-end mt-6">
             <Skeleton className="h-10 w-32" />
           </div>
-        </TabsContent>
-
-        {/* Password Tab */}
-        <TabsContent value="password">
-          <Card>
-            <CardHeader>
-              <Skeleton className="h-6 w-48 mb-2" />
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="space-y-2">
-                  <Skeleton className="h-4 w-40" />
-                  <Skeleton className="h-10 w-full" />
-                </div>
-              ))}
-              <div className="flex justify-end mt-6">
-                <Skeleton className="h-10 w-40" />
-              </div>
-            </CardContent>
-          </Card>
         </TabsContent>
       </Tabs>
     </div>

@@ -123,7 +123,7 @@ const Navbar: React.FC = () => {
             <Link href="/" className="flex items-center">
               <Image
                 src="/images/logo-amora-stay.png"
-                alt="Amora Stay"
+                alt="Dormate"
                 width={50}
                 height={50}
                 priority={true}
@@ -150,7 +150,7 @@ const Navbar: React.FC = () => {
               href="/posts"
               className="relative group py-2 text-gray-700 hover:text-red-600 font-medium transition-colors duration-300"
             >
-              <span>Đặt phòng</span>
+              <span>Phòng của chúng tôi</span>
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 group-hover:w-full transition-all duration-300"></span>
             </Link>
             <Link
@@ -240,7 +240,7 @@ const Navbar: React.FC = () => {
             <Link href="/" className="flex items-center">
               <Image
                 src="/images/logo-amora-stay.png"
-                alt="Amora Stay"
+                alt="Dormate"
                 width={40}
                 height={40}
                 priority={true}

@@ -3,14 +3,15 @@
 import * as React from "react"
 import {
   ArrowUpCircleIcon,
-  CameraIcon,
+  BarChart3,
   FileCodeIcon,
   FileTextIcon,
   HelpCircleIcon,
   Home,
-  House,
   Package,
-  SettingsIcon,
+  Settings,
+  Shield,
+  Users,
 } from "lucide-react"
 import { NavMain } from "@/components/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
@@ -28,74 +29,26 @@ import {
 const data = {
   navMain: [
     {
-      title: "Phòng của bạn",
-      url: "/rooms",
-      icon: House,
+      title: "Users",
+      url: "/management-users",
+      icon: Users,
     },
     {
-      title: "Bài viết của bạn",
-      url: "/post",
-      icon: Home,
-    },
-    {
-      title: "Gói dịch vụ",
-      url: "/packages",
+      title: "Packages",
+      url: "/management-packages",
       icon: Package,
     },
-  ],
-  navClouds: [
     {
-      title: "Capture",
-      icon: CameraIcon,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: FileTextIcon,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: FileCodeIcon,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
+      title: "Management Rooms",
+      url: "/management-rooms",
+      icon: BarChart3,
     },
   ],
   navSecondary: [
     {
       title: "Settings",
       url: "#",
-      icon: SettingsIcon,
+      icon: Settings,
     },
     {
       title: "Get Help",
@@ -105,7 +58,7 @@ const data = {
   ], 
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="offcanvas" {...props} className="z-10 bg-white">
       <SidebarHeader>
@@ -115,9 +68,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="#">
-                <ArrowUpCircleIcon className="h-5 w-5" />
-                <span className="text-base font-semibold">Dormate</span>
+              <a href="/admin">
+                <Shield className="h-5 w-5" />
+                <span className="text-base font-semibold">Dormate Admin</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -132,4 +85,4 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarFooter>
     </Sidebar>
   )
-}
+} 

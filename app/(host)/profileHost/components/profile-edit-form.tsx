@@ -82,14 +82,22 @@ export function ProfileEditForm({ profile, onSuccess, onCancel }: ProfileEditFor
 
   const onSubmit = async (data: ProfileFormValues) => {
     try {
+      // Convert the date to ISO format for the backend
       await updateProfile({
         ...data,
-        dob: data.dob ? format(data.dob, "MM/dd/yyyy HH:mm:ss") : undefined,
+        dob: data.dob ? data.dob.toISOString() : undefined,
       });
       onSuccess();
-    } catch (error) {
+      toast.success("Profile updated successfully");
+    } catch (error: any) {
       console.error("Error updating profile:", error);
-      toast.error("Failed to update profile");
+      
+      // Handle specific error for date format
+      if (error.response?.data?.errors?.["$.dob"]) {
+        toast.error("Invalid date format. Please select a different date.");
+      } else {
+        toast.error(error.response?.data?.message || "Failed to update profile");
+      }
     }
   };
 

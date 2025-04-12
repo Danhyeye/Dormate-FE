@@ -49,10 +49,13 @@ function PostsContent() {
 
 export default function PostsPage() {
   return (
-    <div className="container mx-auto">
-      <Suspense fallback={<LoadingState />}>
-        <PostsContent />
-      </Suspense>
+    <div className="bg-gray-50 min-h-screen pb-12">
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-4xl sm:text-5xl font-bold mb-8 text-gray-900">Danh sách phòng</h1>
+        <Suspense fallback={<LoadingState />}>
+          <PostsContent />
+        </Suspense>
+      </div>
     </div>
   );
 }

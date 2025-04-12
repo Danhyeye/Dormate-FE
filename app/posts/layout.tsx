@@ -4,8 +4,8 @@ import Footer from "@/app/components/Footer";
 import "@/app/globals.css";
 
 export const metadata: Metadata = {
-  title: "Dormate - Posts",
-  description: "Browse and explore posts",
+  title: "Dormate - Danh sách phòng",
+  description: "Xem và tìm kiếm danh sách phòng trọ phù hợp",
   icons: {
     icon: [
       {
@@ -22,9 +22,9 @@ export default function PostsLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="mt-16">
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-      <main className="min-h-screen">
+      <main className="flex-grow pt-24">
         {children}
       </main>
       <Footer />

@@ -44,4 +44,20 @@ export interface ProfileUpdateResponse {
   status: string;
   data: Profile | null;
   message: string;
+}
+
+export interface PackageHistory {
+  id: string;
+  packageId: string;
+  packageUserId: string;
+  packageDuration: number;
+  postTime: number;
+  landlord: any | null;
+  roomPackage: any | null;
+}
+
+export interface PackageHistoryResponse {
+  status: string;
+  data: PackageHistory[];
+  message: string | null;
 } 

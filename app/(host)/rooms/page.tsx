@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
 import Image from "next/image"
@@ -10,12 +10,23 @@ import { DataTable } from "./components/data-table"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Skeleton } from "@/components/ui/skeleton"
+import { getUserId } from "@/app/services/authService"
 
 export default function Page() {
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
+  const [userId, setUserId] = useState<string | undefined>(undefined);
   
-  const { data, isLoading } = useRooms(pageSize, pageIndex);
+  // Get the userId using authService
+  useEffect(() => {
+    const id = getUserId();
+    if (id) {
+      setUserId(id);
+    }
+  }, []);
+  
+  // Pass userId to filter rooms for this host only
+  const { data, isLoading } = useRooms(pageSize, pageIndex, userId);
   
   const rooms = data?.rooms || [];
   const pagination = data?.pagination;
@@ -56,7 +67,7 @@ export default function Page() {
                 <div>
                   <h2 className="text-2xl font-bold tracking-tight">Room Management</h2>
                   <p className="text-muted-foreground">
-                    Here&apos;s a list of rooms!
+                    Here&apos;s a list of your rooms!
                   </p>
                 </div>
                 <div className="flex items-center space-x-2">

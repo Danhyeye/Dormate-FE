@@ -3,8 +3,10 @@ import { format, toZonedTime } from "date-fns-tz";
 import { vi } from "date-fns/locale";
 import { SignInRequest, SignInResponse, ForgotPasswordResponse } from "../types/auth";
 import { Post, PostApiResponse, PostListResponse, PostSearchParams, CreatePostRequest, UpdatePostRequest } from "../types/post";
-import { Room, RoomResponse, CreateRoomRequest, UpdateRoomRequest } from "../types/room";
+import { Room, RoomResponse, CreateRoomRequest, UpdateRoomRequest, RoomStatus } from "../types/room";
 import { Profile, ProfileResponse, UpdateProfileRequest, ProfileUpdateResponse } from "../types/profile";
+import { Package, PackageListResponse, PackageSearchParams } from "../types/package";
+import { User, UserSearchParams, UserListResponse } from "../types/user";
 
 export type { Room } from "../types/room";
 
@@ -13,6 +15,8 @@ const API_URL_ROOMS = `${API_BASE_URL}/rooms`;
 const API_URL_AUTH = `${API_BASE_URL}/auth`;
 const API_URL_PROFILE = `${API_BASE_URL}/profile`;
 const API_URL_POSTS = `${API_BASE_URL}/posts`;
+const API_URL_PACKAGES = `${API_BASE_URL}/packages`;
+const API_URL = `${API_BASE_URL}/admin`;
 const timeZone = process.env.TIMEZONE || "UTC";
 
 export const slugify = (text: string): string => {
@@ -107,8 +111,37 @@ export const login = async (userName: string, password: string): Promise<{
         }
       }
 
+      let email: string | undefined = response.data.data.user?.email;
+      
+      if (!email) {
+        const emailFromToken = extractEmailFromToken(accessToken);
+        if (emailFromToken) {
+          email = emailFromToken;
+        }
+      }
+
       if (fullname) {
         localStorage.setItem("fullname", fullname);
+      }
+      
+      if (email) {
+        localStorage.setItem("email", email);
+      } else {
+        console.warn("No email found in either API response or token");
+      }
+      // Store avatar if available
+      try {
+        const payload = accessToken.split('.')[1];
+        const decodedPayload = atob(payload);
+        const claims = JSON.parse(decodedPayload);
+        
+        if (claims.Avatar || claims.avatar) {
+          localStorage.setItem("avatar", claims.Avatar || claims.avatar);
+        } else if (response.data.data.user && 'avatar' in response.data.data.user) {
+          localStorage.setItem("avatar", (response.data.data.user as any).avatar);
+        }
+      } catch (error) {
+        console.error("Error extracting avatar from token:", error);
       }
       
       return { 
@@ -163,6 +196,21 @@ function extractNameFromToken(token: string): string | null {
     return claims["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"] || null;
   } catch (error) {
     console.error("Error extracting name from token:", error);
+    return null;
+  }
+}
+
+function extractEmailFromToken(token: string): string | null {
+  try {
+    const payload = token.split('.')[1];
+    const decodedPayload = atob(payload);
+    const claims = JSON.parse(decodedPayload);
+    
+    // Check for different possible email field names with case variations
+    return claims.email || claims.Email || claims.EMAIL || 
+           claims["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"] || null;
+  } catch (error) {
+    console.error("Error extracting email from token:", error);
     return null;
   }
 }
@@ -258,6 +306,9 @@ export const fetchPosts = async (searchParams?: PostSearchParams): Promise<{post
 
     const queryParams: string[] = [];
     
+    // Always include status=1 in the query parameters
+    queryParams.push(`status=1`);
+    
     if (searchParams) {
       if (searchParams.id) queryParams.push(`id=${searchParams.id}`);
       if (searchParams.name) queryParams.push(`name=${searchParams.name}`);
@@ -268,6 +319,7 @@ export const fetchPosts = async (searchParams?: PostSearchParams): Promise<{post
       if (searchParams.address) queryParams.push(`address=${searchParams.address}`);
       if (searchParams.fromPrice) queryParams.push(`fromPrice=${searchParams.fromPrice}`);
       if (searchParams.toPrice) queryParams.push(`toPrice=${searchParams.toPrice}`);
+      if (searchParams.status) queryParams.push(`status=${searchParams.status}`); // This will override the default if provided
       if (searchParams.defaultSearch) {
         queryParams.push(`defaultSearch.perPage=${searchParams.defaultSearch.perPage}`);
         queryParams.push(`defaultSearch.currentPage=${searchParams.defaultSearch.currentPage}`);
@@ -291,7 +343,6 @@ export const fetchPosts = async (searchParams?: PostSearchParams): Promise<{post
       };
     }
     
-    console.log('Response data:', response.data);
     return { posts: [] };
   } catch (error) {
     console.error("Error fetching posts:", error);
@@ -307,7 +358,6 @@ export interface PostDetailResponse {
 
 export const getPostById = async (id: string): Promise<PostDetailResponse | null> => {
   try {
-    console.log(`Fetching post with ID: ${id}`);
     const response = await axios.get<any>(`${API_URL_POSTS}/${id}`);
     
     if (response.data.status === "Success") {
@@ -326,10 +376,16 @@ export const getPostById = async (id: string): Promise<PostDetailResponse | null
   }
 };
 
-export const fetchRooms = async (perPage: number = 10, currentPage: number = 0): Promise<{rooms: Room[], pagination?: {total: number, perPage: number, currentPage: number}}> => {
+export const fetchRooms = async (perPage: number = 10, currentPage: number = 0, userId?: string): Promise<{rooms: Room[], pagination?: {total: number, perPage: number, currentPage: number}}> => {
   try {
-    const url = `${API_URL_ROOMS}?defaultSearch.perPage=${perPage}&defaultSearch.currentPage=${currentPage}`;
-    console.log(`Fetching rooms with pagination: ${url}`);
+    let url = `${API_URL_ROOMS}?defaultSearch.perPage=${perPage}&defaultSearch.currentPage=${currentPage}`;
+    
+    // Add userId filter if provided (for host view)
+    if (userId) {
+      url += `&userId=${userId}`;
+    }
+    
+    
     
     const response = await axios.get<RoomResponse>(url);
     if (response.data.status === "Success" && response.data.data?.rooms) {
@@ -365,7 +421,7 @@ export const getRoomById = async (id: string): Promise<Room | null> => {
 export const createRoom = async (roomData: CreateRoomRequest): Promise<Room> => {
   const formData = new FormData();
   
-  console.log("Creating room with data:", roomData);
+  
   
   // Map properties to the expected capitalized format
   const fieldMapping: Record<string, string> = {
@@ -674,6 +730,224 @@ export const changePassword = async (currentPassword: string, newPassword: strin
     return {
       status: "error",
       message: error.response?.data?.message || "Failed to change password"
+    };
+  }
+};
+
+export const fetchPackages = async (searchParams?: PackageSearchParams): Promise<{packages: Package[], pagination?: {total: number, perPage: number, currentPage: number}}> => {
+  try {
+    let url = `${API_URL_PACKAGES}`;
+
+    const queryParams: string[] = [];
+    
+    if (searchParams) {
+      if (searchParams.id) queryParams.push(`id=${searchParams.id}`);
+      if (searchParams.title) queryParams.push(`title=${searchParams.title}`);
+      if (searchParams.defaultSearch) {
+        queryParams.push(`defaultSearch.perPage=${searchParams.defaultSearch.perPage}`);
+        queryParams.push(`defaultSearch.currentPage=${searchParams.defaultSearch.currentPage}`);
+      }
+    }
+    
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+
+    const response = await axios.get<PackageListResponse>(url);
+    
+    if (response.data.status === "Success" && response.data.data?.packages) {
+      return {
+        packages: response.data.data.packages,
+        pagination: response.data.data.pagination
+      };
+    }
+    
+    console.log('Response data:', response.data);
+    return { packages: [] };
+  } catch (error) {
+    console.error("Error fetching packages:", error);
+    return { packages: [] };
+  }
+};
+
+export const getPackageById = async (id: string): Promise<Package | null> => {
+  try {
+    const response = await axios.get<PackageListResponse>(`${API_URL_PACKAGES}/${id}`);
+    if (response.data.status === "Success" && response.data.data?.packages?.[0]) {
+      return response.data.data.packages[0];
+    }
+    return null;
+  } catch (error) {
+    console.error("Error fetching package by ID:", error);
+    return null;
+  }
+};
+
+export const checkoutPackage = async (packageId: string): Promise<string | null> => {
+  try {
+    const token = localStorage.getItem("accessToken");
+    
+    // Create form data instead of JSON
+    const formData = new FormData();
+    formData.append("pid", packageId);
+    
+    console.log(`Sending checkout request for package: ${packageId}`);
+    
+    // Use URL with query parameter format
+    const response = await axios.post(`${API_URL_PACKAGES}/checkout?pid=${packageId}`, formData, {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+        "Content-Type": "multipart/form-data"
+      }
+    });
+    
+    console.log("Checkout response:", response.data);
+    
+    // Handle different possible response formats
+    if (response.data) {
+      // Case 1: If the response contains a direct URL string
+      if (typeof response.data === "string" && response.data.startsWith("http")) {
+        return response.data;
+      }
+      
+      // Case 2: If the response has a paymentUrl property
+      if (response.data.paymentUrl) {
+        return response.data.paymentUrl;
+      }
+      
+      // Case 3: If the response has a data.paymentUrl structure
+      if (response.data.data && response.data.data.paymentUrl) {
+        return response.data.data.paymentUrl;
+      }
+      
+      // Case 4: If the response is the URL directly in the data property
+      if (response.data.data && typeof response.data.data === "string" && response.data.data.startsWith("http")) {
+        return response.data.data;
+      }
+      
+      // Case 5: If the response is in another format, log it for debugging
+      console.log("Response structure:", JSON.stringify(response.data));
+      
+      // Fallback: try to find any URL-like string in the response
+      const responseStr = JSON.stringify(response.data);
+      const urlMatch = responseStr.match(/(https?:\/\/[^\s"]+)/g);
+      if (urlMatch && urlMatch[0]) {
+        return urlMatch[0].replace(/[",\\]/g, '');
+      }
+    }
+    
+    console.error("Could not extract payment URL from response:", response.data);
+    return null;
+  } catch (error) {
+    console.error("Error during package checkout:", error);
+    return null;
+  }
+};
+
+export const fetchUsers = async (searchParams?: UserSearchParams): Promise<{users: User[], pagination?: {total: number, perPage: number, currentPage: number}}> => {
+  try {
+    let url = `${API_URL}/get-all-user`;
+
+    const queryParams: string[] = [];
+    
+    if (searchParams) {
+      if (searchParams.perPage) queryParams.push(`perPage=${searchParams.perPage}`);
+      if (searchParams.currentPage) queryParams.push(`currentPage=${searchParams.currentPage}`);
+    }
+    
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("No authentication token found");
+    }
+
+    const response = await axios.get<UserListResponse>(url, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    
+    if (response.data) {
+      return {
+        users: response.data.data,
+        pagination: {
+          total: response.data.total,
+          perPage: response.data.perPage,
+          currentPage: response.data.page
+        }
+      };
+    }
+    
+    return { users: [] };
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    return { users: [] };
+  }
+};
+
+export const updateRoomStatus = async (roomId: string, status: RoomStatus, note?: string) => {
+  try {
+    const token = localStorage.getItem('accessToken');
+    
+    if (!token) {
+      throw new Error('Authentication token is missing');
+    }
+    
+    const response = await fetch(`${API_URL_ROOMS}/update-room-status`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        id: roomId,
+        status,
+        note
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Failed to update room status: ${response.status}`);
+    }
+    
+    const result = await response.json();
+    
+    if (result.status !== "Success") {
+      throw new Error(result.message || 'Failed to update room status');
+    }
+    
+    // Return the roomId and status since the API returns null in data
+    return { id: roomId, status };
+  } catch (error) {
+    console.error('Error updating room status:', error);
+    throw error;
+  }
+};
+
+export const getPackageHistory = async () => {
+  try {
+    const token = localStorage.getItem('accessToken');
+    
+    if (!token) {
+      throw new Error('Authentication token is missing');
+    }
+    
+    const response = await axios.get(`${API_URL_PROFILE}/package-history`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    
+    return response.data;
+  } catch (error: any) {
+    console.error('Error fetching package history:', error);
+    return {
+      status: 'error',
+      data: [],
+      message: error.response?.data?.message || 'Failed to fetch package history'
     };
   }
 };

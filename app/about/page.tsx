@@ -12,7 +12,7 @@ const AboutPage = () => {
       <section className="relative h-[60vh] md:h-[70vh] overflow-hidden">
         <Image
           src="/images/cover-page-aroma-03.png"
-          alt="Amora Stay"
+          alt="Dormate"
           fill
           sizes="(max-inline-size: 768px) 100vw, 100vw"
           className="object-cover rounded-lg"
@@ -26,7 +26,7 @@ const AboutPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              Về Amora Stay
+              Về Dormate
             </motion.h1>
             <motion.p
               className="text-xl text-white/90 max-w-2xl mx-auto"
@@ -56,20 +56,20 @@ const AboutPage = () => {
               </h2>
               <div className="w-20 h-1 bg-red-600 mb-8"></div>
               <p className="text-gray-700 mb-6 leading-relaxed">
-                Amora Stay được thành lập vào năm 2015 với tầm nhìn đổi mới trải
+                Dormate được thành lập vào năm 2025 với tầm nhìn đổi mới trải
                 nghiệm lưu trú tại Việt Nam. Chúng tôi bắt đầu với một khách sạn
                 nhỏ tại Quảng Ngãi và từng bước phát triển thành chuỗi khách sạn
                 cao cấp được yêu thích trên khắp cả nước.
               </p>
               <p className="text-gray-700 mb-6 leading-relaxed">
-                Điều làm nên sự khác biệt của Amora Stay chính là cam kết mang
+                Điều làm nên sự khác biệt của Dormate chính là cam kết mang
                 đến dịch vụ cá nhân hóa, thiết kế độc đáo kết hợp hiện đại với
                 văn hóa địa phương, và sự tận tâm trong từng chi tiết.
               </p>
               <p className="text-gray-700 leading-relaxed">
-                Tên gọi Amora lấy cảm hứng từ tình yêu (amor) với nghề và niềm
+                Tên gọi Dormate lấy cảm hứng từ tình yêu (Dorm) với nghề và niềm
                 đam mê phục vụ khách hàng một cách tận tâm. Mỗi khách sạn trong
-                hệ thống Amora Stay đều được thiết kế để phản ánh vẻ đẹp của địa
+                hệ thống Dormate đều được thiết kế để phản ánh vẻ đẹp của địa
                 phương, tạo nên không gian độc đáo cho du khách khám phá và thư
                 giãn.
               </p>
@@ -110,7 +110,7 @@ const AboutPage = () => {
               Giá trị cốt lõi của chúng tôi
             </h2>
             <p className="text-gray-700 max-w-3xl mx-auto">
-              Tại Amora Stay, chúng tôi định hướng mọi hoạt động dựa trên những
+              Tại Dormate, chúng tôi định hướng mọi hoạt động dựa trên những
               giá trị cốt lõi sau đây
             </p>
           </motion.div>
@@ -165,7 +165,7 @@ const AboutPage = () => {
       <section className="relative py-20 overflow-hidden h-[60vh] md:h-[70vh]">
         <Image
           src="/images/cover-page-aroma-05.png"
-          alt="Amora Stay background"
+          alt="Dormate background"
           fill
           className="object-cover rounded-lg"
           sizes="200vw"
@@ -181,7 +181,7 @@ const AboutPage = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            Trải nghiệm sự khác biệt tại Amora Stay
+            Trải nghiệm sự khác biệt tại Dormate
           </motion.h2>
           <motion.p
             className="max-w-3xl mx-auto mb-10 text-white/90"
@@ -191,7 +191,7 @@ const AboutPage = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             Đặt phòng ngay hôm nay và khám phá trải nghiệm lưu trú đẳng cấp tại
-            các khách sạn Amora Stay trên khắp Việt Nam
+            các khách sạn Dormate trên khắp Việt Nam
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}

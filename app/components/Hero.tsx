@@ -16,7 +16,7 @@ const HeroSection = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
           >
-            Amora
+            Dormate
             <br />
             Stay
           </motion.h1>
@@ -31,7 +31,7 @@ const HeroSection = () => {
               size="lg"
               className="bg-purple-600 hover:bg-purple-700 text-white font-medium w-full sm:w-auto"
             >
-              Đặt phòng ngay
+              Chọn phòng ngay
             </Button>
           </motion.div>
 
@@ -41,8 +41,8 @@ const HeroSection = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
-            Đặt phòng ngay hôm nay và khám phá trải nghiệm lưu trú đẳng cấp tại
-            Amora Stay đang có mặt ở quận 9, Hồ Chí Minh
+            Chọn phòng ngay hôm nay và khám phá trải nghiệm lưu trú đẳng cấp tại
+            Dormate đang có mặt ở quận 9, Hồ Chí Minh
           </motion.p>
         </div>
 
@@ -77,11 +77,11 @@ const HeroSection = () => {
                 </h3>
               </div>
               <p className="text-xs sm:text-sm text-gray-600">
-                "Amora Stay đã vượt xa mọi kỳ vọng của chúng tôi về một nền tảng
+                "Dormate đã vượt xa mọi kỳ vọng của chúng tôi về một nền tảng
                 cho thuê bất động sản nghỉ dưỡng cao cấp. Toàn bộ trải nghiệm,
                 từ đặt phòng đến trả phòng, đều diễn ra suôn sẻ và thú vị. Các
                 căn hộ đều tuyệt đẹp, được bảo trì tốt và hoàn toàn đúng như mô
-                tả. Nhờ Amora Stay, kỳ nghỉ của chúng tôi thực sự khó quên.
+                tả. Nhờ Dormate, kỳ nghỉ của chúng tôi thực sự khó quên.
                 Chúng tôi rất khuyến khích bạn nên thử!"
               </p>
             </div>
@@ -103,9 +103,9 @@ const HeroSection = () => {
               </div>
               <p className="text-xs sm:text-sm text-gray-600">
                 "Là một du khách thường xuyên, tôi đã trải qua nhiều kỳ nghỉ du
-                lịch, nhưng Amora Stay thực sự đứng out. Sự chú ý đến chi tiết,
+                lịch, nhưng Dormate thực sự đứng out. Sự chú ý đến chi tiết,
                 tiện ích cao cấp và quy trình đặt phòng trở nên dễ dàng, làm cho
-                kỳ nghỉ của tôi trở nên khó quên. Amora Stay cung cấp một sự kết
+                kỳ nghỉ của tôi trở nên khó quên. Dormate cung cấp một sự kết
                 hợp tuyệt vời giữa thoải mái và tinh tế, làm cho nó trở thành
                 lựa chọn hàng đầu của tôi cho kỳ nghỉ cao cấp."
               </p>
@@ -127,11 +127,11 @@ const HeroSection = () => {
                 </h3>
               </div>
               <p className="text-xs sm:text-sm text-gray-600">
-                "Amora Stay đã vượt xa mọi kỳ vọng của tôi về một nền tảng cho
+                "Dormate đã vượt xa mọi kỳ vọng của tôi về một nền tảng cho
                 thuê bất động sản nghỉ dưỡng cao cấp. Quy trình đặt phòng trở
                 nên dễ dàng và thú vị, cùng với sự lựa chọn căn hộ tuyệt vời và
                 dịch vụ khách hàng tận tâm. Kỳ nghỉ của tôi thực sự khó quên, và
-                tôi sẽ chắc chắn sẽ đặt phòng lại với Amora Stay."
+                tôi sẽ chắc chắn sẽ đặt phòng lại với Dormate."
               </p>
             </div>
           </div>

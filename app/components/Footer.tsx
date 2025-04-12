@@ -43,6 +43,7 @@ export function Footer() {
           width={1300}
           height={1300}
           className="h-auto w-auto rounded-lg"
+          priority
         />
       </div>
     </footer>

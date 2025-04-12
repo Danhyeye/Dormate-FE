@@ -89,7 +89,7 @@ export default function Contact() {
                       Điện thoại
                     </p>
                     <p className="text-white text-sm sm:text-base font-medium">
-                      0343904061
+                      0379750637
                     </p>
                   </div>
                 </div>
@@ -101,7 +101,7 @@ export default function Contact() {
                   <div>
                     <p className="text-gray-400 text-xs sm:text-sm">Email</p>
                     <p className="text-white text-sm sm:text-base font-medium break-words">
-                      dangtien9955@gmail.com
+                    dormate@gmail.com
                     </p>
                   </div>
                 </div>

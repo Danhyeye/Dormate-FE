@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
 import Image from "next/image"
@@ -10,12 +10,29 @@ import { DataTable } from "./components/data-table"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Skeleton } from "@/components/ui/skeleton"
+import { getUserId } from "@/app/services/authService"
 
 export default function Page() {
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
+  const [userId, setUserId] = useState<string | undefined>(undefined);
   
-  const { data, isLoading } = usePosts(pageSize, pageIndex);
+  // Get the userId using authService
+  useEffect(() => {
+    const id = getUserId();
+    if (id) {
+      setUserId(id);
+    }
+  }, []);
+  
+  // Use userId to filter posts for this host only
+  const { data, isLoading } = usePosts({
+    defaultSearch: {
+      perPage: pageSize,
+      currentPage: pageIndex
+    },
+    userId: userId
+  });
   
   const posts = data?.posts || [];
   const pagination = data?.pagination;
@@ -56,11 +73,8 @@ export default function Page() {
                 <div>
                   <h2 className="text-2xl font-bold tracking-tight">Post Management</h2>
                   <p className="text-muted-foreground">
-                    Here&apos;s a list of posts!
+                    Here&apos;s a list of your posts!
                   </p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Link href={"/post/new"}><Button>Add new post</Button></Link>
                 </div>
               </div>
               {isLoading ? (

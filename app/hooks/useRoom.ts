@@ -1,4 +1,4 @@
-import { Room, RoomResponse, CreateRoomRequest, UpdateRoomRequest } from "../types/room"
+import { RoomStatus } from "../types/room"
 import { 
   useQuery, 
   useMutation, 
@@ -9,7 +9,8 @@ import {
   getRoomById as getRoomByIdAPI, 
   createRoom as createRoomAPI, 
   updateRoom as updateRoomAPI, 
-  deleteRoom as deleteRoomAPI 
+  deleteRoom as deleteRoomAPI,
+  updateRoomStatus as updateRoomStatusAPI
 } from '@/app/services/RequestManager'
 
 // Query keys
@@ -22,10 +23,10 @@ export const roomKeys = {
 };
 
 // React Query hooks
-export const useRooms = (perPage: number = 10, currentPage: number = 0) => {
+export const useRooms = (perPage: number = 10, currentPage: number = 0, userId?: string) => {
   return useQuery({
-    queryKey: [...roomKeys.list(), perPage, currentPage],
-    queryFn: () => fetchRoomsAPI(perPage, currentPage),
+    queryKey: [...roomKeys.list(), perPage, currentPage, userId],
+    queryFn: () => fetchRoomsAPI(perPage, currentPage, userId),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 };
@@ -71,6 +72,20 @@ export const useDeleteRoom = () => {
       queryClient.invalidateQueries({ queryKey: roomKeys.list() });
       queryClient.removeQueries({ queryKey: roomKeys.detail(id) });
     },
+  });
+};
+
+export const useUpdateRoomStatus = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: ({ roomId, status, note }: { roomId: string; status: RoomStatus; note?: string }) => {
+      return updateRoomStatusAPI(roomId, status, note);
+    },
+    onSuccess: () => {
+      // Just invalidate the rooms list query to force a refetch
+      queryClient.invalidateQueries({ queryKey: ['rooms'] });
+    }
   });
 };
 

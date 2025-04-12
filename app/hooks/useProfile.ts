@@ -4,13 +4,15 @@ import {
   ProfileResponse, 
   UpdateProfileRequest, 
   ChangePasswordRequest,
-  ProfileUpdateResponse 
+  ProfileUpdateResponse,
+  PackageHistoryResponse
 } from '@/app/types/profile';
 import {
   getProfile,
   updateProfile,
   updateProfileWithAvatar,
-  changePassword
+  changePassword,
+  getPackageHistory
 } from '@/app/services/RequestManager';
 
 // Query keys
@@ -18,16 +20,34 @@ export const profileKeys = {
   all: ['profile'] as const,
   details: () => [...profileKeys.all, 'details'] as const,
   detail: (id: string) => [...profileKeys.details(), id] as const,
+  packageHistory: () => [...profileKeys.all, 'packageHistory'] as const,
 };
 
 // Get current user profile
 export const useProfile = () => {
+  const isClient = typeof window !== 'undefined';
+  const hasToken = isClient ? !!localStorage.getItem('accessToken') : false;
+  
   return useQuery<ProfileResponse, Error>({
     queryKey: profileKeys.details(),
     queryFn: getProfile,
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: false,
-    enabled: typeof window !== 'undefined' && !!localStorage.getItem('accessToken')
+    enabled: hasToken,
+  });
+};
+
+// Get package history for host
+export const usePackageHistory = () => {
+  const isClient = typeof window !== 'undefined';
+  const hasToken = isClient ? !!localStorage.getItem('accessToken') : false;
+  
+  return useQuery<PackageHistoryResponse, Error>({
+    queryKey: profileKeys.packageHistory(),
+    queryFn: getPackageHistory,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    retry: false,
+    enabled: hasToken,
   });
 };
 

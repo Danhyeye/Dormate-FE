@@ -26,7 +26,7 @@ export default function LoginPage() {
               transition={{ duration: 0.5, delay: 0.4 }}
               className="text-3xl font-bold mb-6"
             >
-              Chào mừng bạn đến với Amora Stay
+              Chào mừng bạn đến với Dormate
             </motion.h1>
             <motion.p
               initial={{ opacity: 0 }}
@@ -35,7 +35,7 @@ export default function LoginPage() {
               className="text-red-100"
             >
               Đăng nhập để truy cập vào tài khoản của bạn và khám phá các
-              homestays tuyệt vời cho chuyến phượt của bạn.
+              phòng trọ tuyệt vời cho chuyến phượt của bạn.
             </motion.p>
           </div>
         </motion.div>

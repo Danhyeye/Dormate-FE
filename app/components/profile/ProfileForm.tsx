@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -36,6 +36,11 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>;
 export default function ProfileForm({ profile }: { profile: Profile }) {
   const updateProfileMutation = useUpdateProfile();
   const [isEditing, setIsEditing] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Parse date string from API (if exists)
   const parsedDate = profile.dob 
@@ -69,7 +74,7 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
   // Handle form submission
   const onSubmit = async (data: ProfileFormValues) => {
     try {
-      // Format date in ISO format (or according to API requirements)
+      // Format date in ISO format for API consistency
       const formattedData: UpdateProfileRequest = {
         fullName: data.fullName,
         email: data.email,
@@ -86,11 +91,57 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
       await updateProfileMutation.mutateAsync(formattedData);
       toast.success("Thông tin hồ sơ đã được cập nhật");
       setIsEditing(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating profile:", error);
-      toast.error("Lỗi khi cập nhật thông tin hồ sơ");
+      
+      // Handle specific error for date format
+      if (error.response?.data?.errors?.["$.dob"]) {
+        toast.error("Sai định dạng ngày. Vui lòng chọn một ngày khác.");
+      } else {
+        toast.error(error.response?.data?.message || "Lỗi khi cập nhật thông tin hồ sơ");
+      }
     }
   };
+
+  if (!isMounted) {
+    return (
+      <div className="space-y-6 opacity-60">
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="h-6 w-40 bg-muted rounded mb-2"></div>
+            <div className="h-4 w-64 bg-muted rounded"></div>
+          </CardHeader>
+          <CardContent className="grid gap-6 md:grid-cols-2">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="space-y-2">
+                <div className="h-4 w-20 bg-muted rounded"></div>
+                <div className="h-10 w-full bg-muted rounded"></div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="h-6 w-40 bg-muted rounded mb-2"></div>
+            <div className="h-4 w-64 bg-muted rounded"></div>
+          </CardHeader>
+          <CardContent className="grid gap-6 md:grid-cols-2">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="space-y-2">
+                <div className="h-4 w-20 bg-muted rounded"></div>
+                <div className="h-10 w-full bg-muted rounded"></div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        <div className="flex justify-end">
+          <div className="h-10 w-32 bg-muted rounded"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Form {...form}>

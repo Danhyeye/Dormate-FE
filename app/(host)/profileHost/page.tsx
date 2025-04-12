@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useProfile, useUpdateProfileWithAvatar, useChangePassword } from "@/app/hooks/useProfile";
 import { 
   Mail, 
@@ -16,7 +16,8 @@ import {
   Settings,
   LogOut,
   Loader2,
-  Lock
+  Lock,
+  Package
 } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -74,6 +75,8 @@ import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { logout } from "@/app/services/authService";
+import { PackageHistoryTab } from "./components/package-history";
 
 // Converts timestamp to readable date format
 const formatDate = (dateString: string | undefined) => {
@@ -108,9 +111,14 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("overview");
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const passwordForm = useForm<PasswordFormValues>({
     resolver: zodResolver(passwordSchema),
@@ -168,16 +176,17 @@ export default function ProfilePage() {
   };
 
   const handleLogout = () => {
-    // Clear auth tokens
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    
-    // Redirect to login
-    router.push("/auth/login");
-    toast.success("Logged out successfully");
+    if (isMounted) {
+      // Use the logout function from authService
+      logout();
+      
+      // Redirect to login
+      router.push("/login");
+      toast.success("Logged out successfully");
+    }
   };
 
-  if (isLoading) {
+  if (isLoading || !isMounted) {
     return (
       <SidebarInset>
         <header className="group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 flex h-12 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear">
@@ -284,7 +293,7 @@ export default function ProfilePage() {
             <div className="h-48 sm:h-64 md:h-80 relative overflow-hidden">
               <Image
                 fill 
-                src="/hero.png" 
+                src="/images/hero.avif" 
                 alt="Profile Banner" 
                 className="w-full h-full object-cover"
                 priority
@@ -298,7 +307,6 @@ export default function ProfilePage() {
                 {/* Avatar */}
                 <div className="relative">
                   <Avatar className="h-24 w-24 sm:h-32 sm:w-32 border-4 border-background">
-                    <AvatarImage src="" alt={profile.userName} />
                     <AvatarFallback className="text-4xl">
                       {profile.userName ? profile.userName.substring(0, 2).toUpperCase() : 
                        profile.fullName ? profile.fullName.substring(0, 2).toUpperCase() : 
@@ -330,8 +338,7 @@ export default function ProfilePage() {
                 {/* Main Info */}
                 <div className="flex-1 flex flex-col md:flex-row justify-between items-center md:items-end gap-4 text-center md:text-left">
                   <div>
-                    <h2 className="text-2xl font-bold">{profile.fullName}</h2>
-                    <p className="text-muted-foreground mb-2">
+                    <p className="text-muted-foreground mb-4">
                       @{profile.userName}
                     </p>
                     <div className="flex flex-wrap gap-2 justify-center md:justify-start">
@@ -346,12 +353,6 @@ export default function ProfilePage() {
                         {profile.type === 1 ? 'Host' : 'User'}
                       </Badge>
                       <HoverCard>
-                        <HoverCardTrigger asChild>
-                          <Badge variant="outline" className="px-2 py-1 cursor-help">
-                            <Clock className="h-3 w-3 mr-1" /> 
-                            User ID: {profile.id}
-                          </Badge>
-                        </HoverCardTrigger>
                         <HoverCardContent className="w-80">
                           <div className="flex justify-between space-x-4">
                             <div className="space-y-1">
@@ -404,19 +405,19 @@ export default function ProfilePage() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Account</DropdownMenuLabel>
+                        <DropdownMenuLabel>Hồ sơ</DropdownMenuLabel>
                         <DropdownMenuItem onClick={() => setIsEditingProfile(true)}>
                           <Edit className="h-4 w-4 mr-2" />
-                          <span>Edit Profile</span>
+                          <span>Chỉnh sửa hồ sơ</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => setIsPasswordDialogOpen(true)}>
                           <Lock className="h-4 w-4 mr-2" />
-                          <span>Change Password</span>
+                          <span>Đổi mật khẩu</span>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="text-destructive" onClick={handleLogout}>
                           <LogOut className="h-4 w-4 mr-2" />
-                          <span>Log out</span>
+                          <span>Đăng xuất</span>
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -442,6 +443,13 @@ export default function ProfilePage() {
                     className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none h-12 px-6"
                   >
                     Settings
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="packages" 
+                    className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none h-12 px-6"
+                  >
+                    <Package className="h-4 w-4 mr-2" />
+                    <span>Gói dịch vụ</span>
                   </TabsTrigger>
                 </TabsList>
               </div>
@@ -514,34 +522,6 @@ export default function ProfilePage() {
                         </div>
                       </CardContent>
                     </Card>
-                    
-                    <Card>
-                      <CardHeader className="pb-2">
-                        <CardTitle className="text-base font-medium">Account Status</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-4">
-                          <div className="flex items-center justify-between">
-                            <span className="font-medium">Status</span>
-                            <Badge variant={profile.status === 1 ? "default" : "secondary"}>
-                              {profile.status === 1 ? "Active" : "Inactive"}
-                            </Badge>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="font-medium">Account Type</span>
-                            <Badge variant="outline">
-                              {profile.type === 1 ? "Host" : "User"}
-                            </Badge>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="font-medium">Gender</span>
-                            <Badge variant="outline">
-                              {profile.gender ? "Male" : "Female"}
-                            </Badge>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
                   </div>
                 </div>
               </TabsContent>
@@ -581,6 +561,10 @@ export default function ProfilePage() {
                     </Card>
                   </div>
                 </div>
+              </TabsContent>
+              
+              <TabsContent value="packages">
+                <PackageHistoryTab />
               </TabsContent>
             </Tabs>
           </div>

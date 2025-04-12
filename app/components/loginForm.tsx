@@ -45,10 +45,15 @@ export default function LoginForm() {
         const claims = JSON.parse(decodedPayload);
         const userRole = claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
         
+        // Store the role in localStorage for easier access
+        localStorage.setItem("userRole", userRole);
+        
         if (userRole === "Landlord") {
           router.push("/rooms");
         } else if (userRole === "Tenant") {
           router.push("/");
+        } else if (userRole === "Admin") {
+          router.push("/management-users");
         } else {
           router.push("/");
         }

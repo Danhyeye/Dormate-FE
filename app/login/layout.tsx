@@ -4,8 +4,8 @@ import Footer from "@/app/components/Footer";
 import "@/app/globals.css";
 
 export const metadata: Metadata = {
-  title: "Dormate - Login",
-  description: "Log in to your account",
+  title: "Dormate - Đăng nhập",
+  description: "Đăng nhập vào tài khoản của bạn",
   icons: {
     icon: [
       {

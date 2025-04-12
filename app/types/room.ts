@@ -74,4 +74,10 @@ export interface CreateRoomRequest {
 
 export interface UpdateRoomRequest extends CreateRoomRequest {
   id: string
+}
+
+export interface RoomStatusChangeRequest {
+  id: string
+  status: number
+  note: string
 } 

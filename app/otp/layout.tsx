@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import Navbar from "@/app/components/TopNav";
 import Footer from "@/app/components/Footer";
 import "@/app/globals.css";
+import { Inter } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "OTP",
@@ -16,18 +19,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default function OtpLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`antialiased font-sans`}>
-        <Navbar />
-        {children}
-        <Footer />
-      </body>
-    </html>
+    <div className={inter.className}>
+      <Navbar />
+      {children}
+      <Footer />
+    </div>
   );
 }

@@ -107,6 +107,11 @@ const nextConfig = {
         hostname: 'cdn.tingtong.vn',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'firebasestorage.googleapis.com',
+        pathname: '/**',
+      },
     ],
   },
   // Performance optimizations
