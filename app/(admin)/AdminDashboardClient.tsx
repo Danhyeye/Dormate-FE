@@ -1,14 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Activity, BarChart3, CircleDollarSign, Package, Percent, TrendingUp, Users } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import AdminDashboardSkeleton from "./LoadingState";
 
 // Demo statistics - in a real app, these would come from an API
 const stats = [
@@ -47,16 +44,6 @@ const stats = [
 ];
 
 export default function AdminDashboardClient() {
-  const [isMounted, setIsMounted] = useState(false);
-  
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-  
-  if (!isMounted) {
-    return <AdminDashboardSkeleton />;
-  }
-  
   return (
     <SidebarInset>
       <header className="group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 flex h-12 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear">
