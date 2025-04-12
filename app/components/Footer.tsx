@@ -39,7 +39,7 @@ export function Footer() {
       <div className="flex justify-center py-4">
         <Image
           src="/images/logo.jpg"
-          alt="Aroma Stay"
+          alt="Dormate"
           width={1300}
           height={1300}
           className="h-auto w-auto rounded-lg"
