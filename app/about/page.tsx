@@ -72,7 +72,7 @@ const AboutPage = () => {
               transition={{ duration: 0.8 }}
             >
               <Image
-                src="/images/logo.jpg"
+                src="/images/logo.png"
                 alt="Our story"
                 width={1200}
                 height={800}

@@ -38,7 +38,7 @@ export function Footer() {
 
       <div className="flex justify-center py-4">
         <Image
-          src="/images/logo.jpg"
+          src="/images/logo.png"
           alt="Dormate"
           width={1300}
           height={1300}

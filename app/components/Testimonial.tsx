@@ -28,7 +28,7 @@ export default function Testimonial() {
             viewport={{ once: true }}
           >
             <Image
-              src="/images/logo.jpg"
+              src="/images/logo.png"
               alt="Dormate logo"
               width={1000}
               height={1000}
