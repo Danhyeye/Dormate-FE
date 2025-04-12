@@ -61,7 +61,6 @@ export function PackageHistoryTab() {
           <TableHeader>
             <TableRow>
               <TableHead>Mã gói</TableHead>
-              <TableHead>Thời hạn (tháng)</TableHead>
               <TableHead>Số lượng bài đăng</TableHead>
               <TableHead>Trạng thái</TableHead>
             </TableRow>
@@ -70,7 +69,6 @@ export function PackageHistoryTab() {
             {packageHistory.map((pkg) => (
               <TableRow key={pkg.id}>
                 <TableCell className="font-medium">{pkg.packageId}</TableCell>
-                <TableCell>{pkg.packageDuration}</TableCell>
                 <TableCell>{pkg.postTime}</TableCell>
                 <TableCell>
                   <Badge variant="outline" className="bg-green-50 text-green-700 hover:bg-green-50">
