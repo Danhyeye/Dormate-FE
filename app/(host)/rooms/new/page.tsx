@@ -6,7 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, SubmitHandler } from "react-hook-form"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-
 import { Separator } from "@/components/ui/separator"
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
@@ -30,6 +29,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
 import { useCreateRoom } from "@/app/hooks/useRoom"
+import { usePackageHistory } from "@/app/hooks/useProfile"
 import { RoomStatus } from "@/app/types/room"
 
 const formSchema = z.object({
@@ -43,7 +43,7 @@ const formSchema = z.object({
   price: z.coerce.number().min(1, { message: "Price must be greater than 0" }),
   status: z.coerce.number(),
   isHide: z.boolean(),
-  packageId: z.string(),
+  packageId: z.string().min(1, { message: "Package is required" }),
   availableTo: z.date().optional(),
 });
 
@@ -52,6 +52,7 @@ type RoomFormValues = z.infer<typeof formSchema>;
 export default function CreateRoomPage() {
   const router = useRouter();
   const { mutateAsync: createRoom, isPending } = useCreateRoom();
+  const { data: packageHistory, isLoading: isLoadingPackages } = usePackageHistory();
   const [mainPicture, setMainPicture] = useState<File | null>(null);
   const [subPictures, setSubPictures] = useState<File[]>([]);
   const mainPictureRef = useRef<HTMLInputElement>(null);
@@ -103,8 +104,20 @@ export default function CreateRoomPage() {
 
   const onSubmit: SubmitHandler<RoomFormValues> = async (values) => {
     try {
+      // Check for auth token
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        toast.error("You must be logged in to create a room. Please log in and try again.");
+        return;
+      }
+
       if (!mainPicture) {
         toast.error("Main picture is required");
+        return;
+      }
+
+      if (!values.packageId) {
+        toast.error("Package selection is required");
         return;
       }
 
@@ -120,8 +133,11 @@ export default function CreateRoomPage() {
         subImages: subPictures.map(img => img.name).join(", ")
       });
 
+      // Add explicit package ID log
+      console.log("Using package ID:", values.packageId);
+
       // Use the createRoom mutation from useCreateRoom hook
-      await createRoom({
+      const result = await createRoom({
         name: values.name,
         description: values.description,
         price: values.price,
@@ -138,10 +154,13 @@ export default function CreateRoomPage() {
         availableTo
       });
       
+      console.log("Room creation result:", result);
       toast.success("Room created successfully");
       router.push("/rooms");
     } catch (error: any) {
       console.error("Error creating room:", error);
+      console.error("Error details:", error.response?.data || "No response data");
+      
       const errorMessage = error.response?.data?.message || error.message || "Failed to create room";
       toast.error(errorMessage);
     }
@@ -160,7 +179,7 @@ export default function CreateRoomPage() {
         </div>
       </header>
       <div className="flex flex-1 flex-col">
-        <div className="container max-w-4xl py-6">
+        <div className="container max-w-4xl py-6 mx-auto w-full">
           <div className="mb-6">
             <h2 className="text-2xl font-bold tracking-tight">Create New Room</h2>
             <p className="text-muted-foreground">
@@ -362,17 +381,17 @@ export default function CreateRoomPage() {
                           <FormLabel>Status</FormLabel>
                           <Select 
                             onValueChange={(value) => field.onChange(parseInt(value))} 
-                            defaultValue={field.value.toString()}
+                            defaultValue={RoomStatus.Pending.toString()}
+                            value={field.value.toString()}
+                            disabled
                           >
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select status" />
+                                <SelectValue placeholder="Pending" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
                               <SelectItem value={RoomStatus.Pending.toString()}>Pending</SelectItem>
-                              <SelectItem value={RoomStatus.Rented.toString()}>Rented</SelectItem>
-                              <SelectItem value={RoomStatus.Available.toString()}>Available</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -385,10 +404,30 @@ export default function CreateRoomPage() {
                       name="packageId"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Package ID</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Package ID" {...field} />
-                          </FormControl>
+                          <FormLabel>Package</FormLabel>
+                          <Select 
+                            onValueChange={field.onChange}
+                            value={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select a package" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {isLoadingPackages ? (
+                                <SelectItem value="loading" disabled>Loading packages...</SelectItem>
+                              ) : packageHistory?.data && packageHistory.data.length > 0 ? (
+                                packageHistory.data.map((pkg) => (
+                                  <SelectItem key={pkg.id} value={pkg.packageId}>
+                                    {`Package: ${pkg.packageId} (${pkg.postTime} posts)`}
+                                  </SelectItem>
+                                ))
+                              ) : (
+                                <SelectItem value="no-packages" disabled>No packages available</SelectItem>
+                              )}
+                            </SelectContent>
+                          </Select>
                           <FormMessage />
                         </FormItem>
                       )}

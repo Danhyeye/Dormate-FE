@@ -67,7 +67,7 @@ export default function Contact() {
                   transition={{ duration: 0.6, delay: 0.4 }}
                   viewport={{ once: true }}
                 >
-                  Bạn đang tìm kiếm phòng nghỉ khách sạn, bất động sản nhà phố
+                  Bạn đang tìm kiếm phòng, bất động sản nhà phố
                   hoặc muốn mua/bán nhà đất? Chúng tôi luôn sẵn sàng hỗ trợ bạn.
                 </motion.p>
               </div>

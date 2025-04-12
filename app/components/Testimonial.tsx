@@ -21,17 +21,17 @@ export default function Testimonial() {
         <div className="flex flex-col items-center">
           {/* Logo */}
           <motion.div
-            className="rounded-full bg-red-50 p-4 w-16 h-16 flex items-center justify-center mb-8"
+            className="rounded-full bg-white p-4 w-16 h-16 flex items-center justify-center mb-8"
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.9, delay: 0.2 }}
             viewport={{ once: true }}
           >
             <Image
-              src="/images/logo-amora-stay.png"
+              src="/images/logo.jpg"
               alt="Dormate logo"
-              width={200}
-              height={200}
+              width={1000}
+              height={1000}
               className="w-16 h-16 object-contain"
             />
           </motion.div>
@@ -46,8 +46,7 @@ export default function Testimonial() {
           >
             <blockquote className="text-center">
               <p className="text-2xl md:text-3xl font-medium text-gray-900 leading-relaxed">
-                &quot; Dormate là công ty mà tôi tin tưởng sử dụng các dịch
-                vụ như khách sạn và bất động sản để mua nhà và thuê phòng nghỉ,
+                &quot; Dormate là công ty mà tôi tin tưởng sử dụng bất động sản để mua nhà và thuê phòng,
                 hoặc chỉ để xem những ngôi nhà mơ ước ở những khu vực mới. Cảm
                   ơn Dormate! &quot;
               </p>

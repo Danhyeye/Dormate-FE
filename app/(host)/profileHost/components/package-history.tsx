@@ -1,12 +1,8 @@
 import { usePackageHistory } from "@/app/hooks/useProfile";
-import { PackageHistory } from "@/app/types/profile";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { formatCurrency } from "@/app/services/RequestManager";
+    import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { format } from "date-fns";
-import { vi } from "date-fns/locale";
 import { Package } from "lucide-react";
 
 export function PackageHistoryTab() {

@@ -77,7 +77,7 @@ export function RoomDialog({
           {/* Main Image */}
           {room.mainPictureUrl && (
             <div className="space-y-2">
-              <h3 className="text-lg font-semibold">Main Image</h3>
+              <h3 className="text-lg font-semibold">Hình ảnh chính</h3>
               <div className="relative group cursor-pointer overflow-hidden rounded-lg shadow-sm" onClick={() => setSelectedImage(room.mainPictureUrl ?? null)}>
                 <img 
                   src={room.mainPictureUrl || ''} 
@@ -85,7 +85,7 @@ export function RoomDialog({
                   className="aspect-square object-cover w-full transition-transform duration-300 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity">
-                  <span className="text-white text-sm font-medium px-3 py-1 bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">View</span>
+                  <span className="text-white text-sm font-medium px-3 py-1 bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">Xem</span>
                 </div>
               </div>
             </div>
@@ -94,7 +94,7 @@ export function RoomDialog({
           {/* Additional Images */}
           {room.subPictureUrl && room.subPictureUrl.length > 0 && (
             <div className="space-y-2">
-              <h3 className="text-lg font-semibold">Additional Images</h3>
+              <h3 className="text-lg font-semibold">Hình ảnh khác</h3>
               <div className="grid grid-cols-3 gap-3">
                 {room.subPictureUrl.map((image, index) => (
                   <div key={index} className="relative group cursor-pointer overflow-hidden rounded-lg shadow-sm" onClick={() => setSelectedImage(image.imageUrl ?? null)}>
@@ -116,23 +116,23 @@ export function RoomDialog({
           <div className="space-y-3 p-4 bg-gray-50 rounded-lg">
             <h3 className="text-lg font-semibold flex items-center">
               <span className="w-2 h-6 bg-blue-600 rounded mr-2"></span>
-              Basic Information
+              Thông tin cơ bản
             </h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Name</p>
+                <p className="text-sm font-medium text-muted-foreground">Tên phòng</p>
                 <p>{room.name}</p>
               </div>
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Status</p>
+                <p className="text-sm font-medium text-muted-foreground">Trạng thái</p>
                 <p>{RoomStatus[room.status]}</p>
               </div>
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Area</p>
+                <p className="text-sm font-medium text-muted-foreground">Diện tích</p>
                 <p>{room.area}m²</p>
               </div>
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Price</p>
+                <p className="text-sm font-medium text-muted-foreground">Giá</p>
                 <p>{formatCurrency(room.price)}</p>
               </div>
             </div>
@@ -143,7 +143,7 @@ export function RoomDialog({
             <div className="space-y-3 p-4 bg-gray-50 rounded-lg">
               <h3 className="text-lg font-semibold flex items-center">
                 <span className="w-2 h-6 bg-blue-600 rounded mr-2"></span>
-                Description
+                Mô tả
               </h3>
               <p className="text-sm">{room.description}</p>
             </div>
@@ -153,23 +153,23 @@ export function RoomDialog({
           <div className="space-y-3 p-4 bg-gray-50 rounded-lg">
             <h3 className="text-lg font-semibold flex items-center">
               <span className="w-2 h-6 bg-blue-600 rounded mr-2"></span>
-              Location
+              Địa chỉ
             </h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Province</p>
+                <p className="text-sm font-medium text-muted-foreground">Tỉnh/Thành phố</p>
                 <p>{room.province}</p>
               </div>
               <div>
-                <p className="text-sm font-medium text-muted-foreground">District</p>
+                <p className="text-sm font-medium text-muted-foreground">Quận/Huyện</p>
                 <p>{room.district}</p>
               </div>
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Ward</p>
+                <p className="text-sm font-medium text-muted-foreground">Phường/Xã</p>
                 <p>{room.ward}</p>
               </div>
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Address</p>
+                <p className="text-sm font-medium text-muted-foreground">Địa chỉ</p>
                 <p>{room.address}</p>
               </div>
             </div>

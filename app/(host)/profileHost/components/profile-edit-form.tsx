@@ -88,15 +88,15 @@ export function ProfileEditForm({ profile, onSuccess, onCancel }: ProfileEditFor
         dob: data.dob ? data.dob.toISOString() : undefined,
       });
       onSuccess();
-      toast.success("Profile updated successfully");
+        toast.success("Hồ sơ đã được cập nhật thành công");
     } catch (error: any) {
       console.error("Error updating profile:", error);
       
       // Handle specific error for date format
       if (error.response?.data?.errors?.["$.dob"]) {
-        toast.error("Invalid date format. Please select a different date.");
+        toast.error("Định dạng ngày không hợp lệ. Vui lòng chọn ngày khác.");
       } else {
-        toast.error(error.response?.data?.message || "Failed to update profile");
+        toast.error(error.response?.data?.message || "Không thể cập nhật hồ sơ");
       }
     }
   };
@@ -109,9 +109,9 @@ export function ProfileEditForm({ profile, onSuccess, onCancel }: ProfileEditFor
           name="fullName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Full Name</FormLabel>
+              <FormLabel>Họ và tên</FormLabel>
               <FormControl>
-                <Input placeholder="Your full name" {...field} />
+                <Input placeholder="Họ và tên của bạn" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -125,7 +125,7 @@ export function ProfileEditForm({ profile, onSuccess, onCancel }: ProfileEditFor
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="your.email@example.com" {...field} />
+                <Input placeholder="email@example.com" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -137,9 +137,9 @@ export function ProfileEditForm({ profile, onSuccess, onCancel }: ProfileEditFor
           name="phoneNumber"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Phone Number</FormLabel>
+              <FormLabel>Số điện thoại</FormLabel>
               <FormControl>
-                <Input placeholder="Your phone number" {...field} />
+                <Input placeholder="Số điện thoại của bạn" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -151,7 +151,7 @@ export function ProfileEditForm({ profile, onSuccess, onCancel }: ProfileEditFor
           name="dob"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>Date of Birth</FormLabel>
+              <FormLabel>Ngày sinh</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -165,7 +165,7 @@ export function ProfileEditForm({ profile, onSuccess, onCancel }: ProfileEditFor
                       {field.value ? (
                         format(field.value, "PPP")
                       ) : (
-                        <span>Pick a date</span>
+                        <span>Chọn ngày sinh</span>
                       )}
                       <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                     </Button>
@@ -200,12 +200,12 @@ export function ProfileEditForm({ profile, onSuccess, onCancel }: ProfileEditFor
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select your gender" />
+                    <SelectValue placeholder="Chọn giới tính của bạn" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="true">Male</SelectItem>
-                  <SelectItem value="false">Female</SelectItem>
+                  <SelectItem value="true">Nam</SelectItem>
+                  <SelectItem value="false">Nữ</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -213,7 +213,7 @@ export function ProfileEditForm({ profile, onSuccess, onCancel }: ProfileEditFor
           )}
         />
         
-        <h3 className="text-lg font-medium mt-6 mb-4">Address Information</h3>
+        <h3 className="text-lg font-medium mt-6 mb-4">Thông tin địa chỉ</h3>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <FormField
@@ -221,9 +221,9 @@ export function ProfileEditForm({ profile, onSuccess, onCancel }: ProfileEditFor
             name="province"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Province</FormLabel>
+                <FormLabel>Tỉnh/Thành phố</FormLabel>
                 <FormControl>
-                  <Input placeholder="Province" {...field} />
+                  <Input placeholder="Tỉnh/Thành phố" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -235,9 +235,9 @@ export function ProfileEditForm({ profile, onSuccess, onCancel }: ProfileEditFor
             name="district"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>District</FormLabel>
+                <FormLabel>Quận/Huyện</FormLabel>
                 <FormControl>
-                  <Input placeholder="District" {...field} />
+                  <Input placeholder="Quận/Huyện" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -249,9 +249,9 @@ export function ProfileEditForm({ profile, onSuccess, onCancel }: ProfileEditFor
             name="ward"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Ward</FormLabel>
+                <FormLabel>Phường/Xã</FormLabel>
                 <FormControl>
-                  <Input placeholder="Ward" {...field} />
+                  <Input placeholder="Phường/Xã" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -263,9 +263,9 @@ export function ProfileEditForm({ profile, onSuccess, onCancel }: ProfileEditFor
             name="address"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Address</FormLabel>
+                <FormLabel>Địa chỉ</FormLabel>
                 <FormControl>
-                  <Input placeholder="Street address" {...field} />
+                  <Input placeholder="Địa chỉ cụ thể" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -274,15 +274,15 @@ export function ProfileEditForm({ profile, onSuccess, onCancel }: ProfileEditFor
         </div>
         
         <div className="flex justify-end gap-3 pt-4">
-          <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
+          <Button type="button" variant="outline" onClick={onCancel}>Hủy bỏ</Button>
           <Button type="submit" disabled={isPending}>
             {isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saving...
+                Đang lưu...
               </>
             ) : (
-              "Save Changes"
+              "Lưu thay đổi"
             )}
           </Button>
         </div>

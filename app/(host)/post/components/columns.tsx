@@ -81,7 +81,7 @@ export const PostDataColumn: ColumnDef<Post>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Name
+          Tên bài viết
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
@@ -95,7 +95,7 @@ export const PostDataColumn: ColumnDef<Post>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price
+          Giá
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
@@ -113,7 +113,7 @@ export const PostDataColumn: ColumnDef<Post>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Area
+          Khu vực
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
@@ -131,7 +131,7 @@ export const PostDataColumn: ColumnDef<Post>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Province
+          Tỉnh/Thành phố
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
@@ -145,7 +145,7 @@ export const PostDataColumn: ColumnDef<Post>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          District
+          Quận/Huyện
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
@@ -153,7 +153,7 @@ export const PostDataColumn: ColumnDef<Post>[] = [
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: "Trạng thái",
     cell: ({ row }) => {
       const status = row.getValue("status") as number
       return (

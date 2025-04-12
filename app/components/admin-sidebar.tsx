@@ -29,33 +29,22 @@ import {
 const data = {
   navMain: [
     {
-      title: "Users",
+      title: "Quản lý người dùng",
       url: "/management-users",
       icon: Users,
     },
     {
-      title: "Packages",
+      title: "Quản lý gói",
       url: "/management-packages",
       icon: Package,
     },
     {
-      title: "Management Rooms",
+      title: "Quản lý phòng",
       url: "/management-rooms",
       icon: BarChart3,
     },
   ],
-  navSecondary: [
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings,
-    },
-    {
-      title: "Get Help",
-      url: "#",
-      icon: HelpCircleIcon,
-    },
-  ], 
+  
 }
 
 export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -78,7 +67,6 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

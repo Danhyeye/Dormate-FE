@@ -28,6 +28,8 @@ import {
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  ChevronLeft,
+  ChevronRight,
   Edit,
   Eye,
   MoreHorizontal,
@@ -47,18 +49,30 @@ export default function RoomsPage() {
   const [isStatusDialogOpen, setIsStatusDialogOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<RoomStatus | null>(null);
   const [statusNote, setStatusNote] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
+  const perPage = 10;
   
-  const { data, isLoading, error, refetch } = useRooms();
+  const { data, isLoading, error, refetch } = useRooms(perPage, currentPage);
   const updateRoomStatus = useUpdateRoomStatus();
   
-  // Filter rooms based on search term and only show pending rooms
-  const filteredRooms = data?.rooms
-    .filter(room => room.status === RoomStatus.Pending)
-    .filter(room => 
-      (room.name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
-      (room.description?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
-      (room.address?.toLowerCase() || '').includes(searchTerm.toLowerCase())
-    ) || [];
+  // Filter rooms with pending status
+  const pendingRooms = data?.rooms.filter(room => room.status === RoomStatus.Pending) || [];
+  
+  // Filter rooms based on search term
+  const filteredRooms = pendingRooms.filter(room => 
+    (room.name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+    (room.description?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+    (room.address?.toLowerCase() || '').includes(searchTerm.toLowerCase())
+  );
+  
+  // Pagination data
+  const totalPages = data?.pagination ? Math.ceil(data.pagination.total / perPage) : 0;
+  
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 0 && newPage < totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
   
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -164,25 +178,25 @@ export default function RoomsPage() {
             orientation="vertical"
             className="mx-2 data-[orientation=vertical]:h-4"
           />
-          <h1 className="text-base font-medium">Room Management</h1>
+          <h1 className="text-base font-medium">Quản lý phòng</h1>
         </div>
       </header>
       
       <div className="container mx-auto py-6 px-4 md:px-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Rooms</h1>
+            <h1 className="text-2xl font-bold tracking-tight">Phòng</h1>
             <p className="text-muted-foreground">
-              Manage all rooms in the system
+              Quản lý tất cả phòng trong hệ thống
             </p>
           </div>
         </div>
         
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle>Room Directory</CardTitle>
+            <CardTitle>Danh sách phòng</CardTitle>
             <CardDescription>
-              View and manage all rooms
+              Xem và quản lý tất cả phòng trong hệ thống
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -190,7 +204,7 @@ export default function RoomsPage() {
               <div className="relative">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search rooms..."
+                  placeholder="Tìm kiếm phòng..."
                   className="pl-8"
                   value={searchTerm}
                   onChange={handleSearch}
@@ -217,19 +231,19 @@ export default function RoomsPage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Description</TableHead>
-                      <TableHead>Price</TableHead>
-                      <TableHead>Address</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                        <TableHead>Tên phòng</TableHead>
+                      <TableHead>Mô tả</TableHead>
+                      <TableHead>Giá</TableHead>
+                      <TableHead>Địa chỉ</TableHead>
+                      <TableHead>Trạng thái</TableHead>
+                      <TableHead className="text-right">Action</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {filteredRooms.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={6} className="text-center py-6 text-muted-foreground">
-                          No rooms found
+                          Không tìm thấy phòng
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -256,15 +270,15 @@ export default function RoomsPage() {
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Change Status</DropdownMenuLabel>
+                                <DropdownMenuLabel>Thay đổi trạng thái</DropdownMenuLabel>
                                 <DropdownMenuItem onClick={() => handleStatusChange(room.id, RoomStatus.Pending)}>
-                                  Pending
+                                  Chờ duyệt
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => handleStatusChange(room.id, RoomStatus.Approved)}>
-                                  Approved
+                                  Đã duyệt
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => handleStatusChange(room.id, RoomStatus.Rejected)}>
-                                  Rejected
+                                  Từ chối
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
@@ -277,10 +291,10 @@ export default function RoomsPage() {
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                <DropdownMenuLabel>Action</DropdownMenuLabel>
                                 <DropdownMenuItem onClick={() => handleViewDetails(room)}>
                                   <Eye className="h-4 w-4 mr-2" />
-                                  View Details
+                                  Xem chi tiết
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
@@ -288,7 +302,7 @@ export default function RoomsPage() {
                                   onClick={() => handleDeleteRoom(room)}
                                 >
                                   <Trash2 className="h-4 w-4 mr-2" />
-                                  Delete
+                                  Xóa
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
@@ -300,6 +314,38 @@ export default function RoomsPage() {
                 </Table>
               </div>
             )}
+            
+            {/* Pagination Controls */}
+            {!isLoading && totalPages > 0 && (
+              <div className="flex items-center justify-between space-x-2 py-4">
+                <div className="text-sm text-muted-foreground">
+                  {`Showing ${filteredRooms.length} of ${data?.pagination?.total || 0} pending rooms`}
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 0}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    <span className="sr-only">Previous Page</span>
+                  </Button>
+                  <div className="text-sm">
+                    Page {currentPage + 1} of {totalPages}
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages - 1 || totalPages === 0}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                    <span className="sr-only">Next Page</span>
+                  </Button>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
@@ -308,28 +354,28 @@ export default function RoomsPage() {
       <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Room Details</DialogTitle>
+            <DialogTitle>Chi tiết phòng</DialogTitle>
             <DialogDescription>
-              View and manage room information
+              Xem và quản lý thông tin phòng
             </DialogDescription>
           </DialogHeader>
           {selectedRoom && (
             <div className="space-y-6 py-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label>Name</Label>
+                  <Label>Tên</Label>
                   <p className="font-medium">{selectedRoom.name}</p>
                 </div>
                 <div>
-                  <Label>Price</Label>
+                  <Label>Giá</Label>
                   <p className="font-medium">{formatCurrency(selectedRoom.price)}</p>
                 </div>
                 <div>
-                  <Label>Area</Label>
+                  <Label>Diện tích</Label>
                   <p className="font-medium">{selectedRoom.area} m²</p>
                 </div>
                 <div>
-                  <Label>Status</Label>
+                  <Label>Trạng thái</Label>
                   <div className="flex items-center gap-2">
                     {getStatusBadge(selectedRoom.status)}
                     <Button
@@ -340,52 +386,52 @@ export default function RoomsPage() {
                         setIsStatusDialogOpen(true);
                       }}
                     >
-                      Change
+                      Thay đổi
                     </Button>
                   </div>
                 </div>
               </div>
 
               <div>
-                <Label>Description</Label>
+                <Label>Mô tả</Label>
                 <p className="text-sm text-muted-foreground">{selectedRoom.description}</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label>Province</Label>
+                  <Label>Tỉnh/Thành phố</Label>
                   <p className="font-medium">{selectedRoom.province}</p>
                 </div>
                 <div>
-                  <Label>District</Label>
+                  <Label>Quận/Huyện</Label>
                   <p className="font-medium">{selectedRoom.district}</p>
                 </div>
                 <div>
-                  <Label>Ward</Label>
+                  <Label>Phường/Xã</Label>
                   <p className="font-medium">{selectedRoom.ward}</p>
                 </div>
                 <div>
-                  <Label>Address</Label>
+                  <Label>Địa chỉ</Label>
                   <p className="font-medium">{selectedRoom.address}</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label>Created At</Label>
+                  <Label>Ngày tạo</Label>
                   <p className="font-medium">{formatDateTime(selectedRoom.createdAt, "dd/MM/yyyy HH:mm")}</p>
                 </div>
                 <div>
-                  <Label>Updated At</Label>
+                  <Label>Ngày cập nhật</Label>
                   <p className="font-medium">
-                    {selectedRoom.updatedAt ? formatDateTime(selectedRoom.updatedAt, "dd/MM/yyyy HH:mm") : "Not updated"}
+                    {selectedRoom.updatedAt ? formatDateTime(selectedRoom.updatedAt, "dd/MM/yyyy HH:mm") : "Không cập nhật"}
                   </p>
                 </div>
               </div>
 
               {selectedRoom.mainPicture && (
                 <div>
-                  <Label>Main Picture</Label>
+                  <Label>Hình ảnh chính</Label>
                   <div className="mt-2">
                     <img
                       src={selectedRoom.mainPicture}
@@ -398,7 +444,7 @@ export default function RoomsPage() {
 
               {selectedRoom.subPictureUrl && selectedRoom.subPictureUrl.length > 0 && (
                 <div>
-                  <Label>Additional Pictures</Label>
+                  <Label>Hình ảnh khác</Label>
                   <div className="grid grid-cols-3 gap-2 mt-2">
                     {selectedRoom.subPictureUrl.map((picture, index) => (
                       <img
@@ -415,7 +461,7 @@ export default function RoomsPage() {
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsViewDialogOpen(false)}>
-              Close
+            Đóng
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -425,20 +471,20 @@ export default function RoomsPage() {
       <Dialog open={isStatusDialogOpen} onOpenChange={setIsStatusDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Update Room Status</DialogTitle>
+            <DialogTitle>Cập nhật trạng thái phòng</DialogTitle>
             <DialogDescription>
-              Change the status of this room
+              Thay đổi trạng thái của phòng này
             </DialogDescription>
           </DialogHeader>
           {selectedRoom && selectedStatus !== null && (
             <div className="space-y-4 py-4">
               <div>
-                <Label>Room</Label>
+                <Label>Phòng</Label>
                 <p className="font-medium">{selectedRoom.name}</p>
                 <p className="text-sm text-muted-foreground">{selectedRoom.description}</p>
               </div>
               <div>
-                <Label>New Status</Label>
+                <Label>Trạng thái mới</Label>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="w-full justify-start mt-1.5">
@@ -459,10 +505,10 @@ export default function RoomsPage() {
                 </DropdownMenu>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="note">Note (Optional)</Label>
+                <Label htmlFor="note">Ghi chú (Tùy chọn)</Label>
                 <Textarea
                   id="note"
-                  placeholder="Add a note about this status change..."
+                  placeholder="Thêm ghi chú về sự thay đổi trạng thái..."
                   value={statusNote}
                   onChange={(e) => setStatusNote(e.target.value)}
                   rows={3}
@@ -475,10 +521,10 @@ export default function RoomsPage() {
               setIsStatusDialogOpen(false);
               setStatusNote("");
             }}>
-              Cancel
+              Hủy bỏ
             </Button>
             <Button onClick={confirmStatusChange}>
-              Update Status
+              Cập nhật trạng thái
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -488,9 +534,9 @@ export default function RoomsPage() {
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Room</DialogTitle>
+            <DialogTitle>Xóa phòng</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this room? This action cannot be undone.
+              Bạn có chắc chắn muốn xóa phòng này? Hành động này không thể hoàn tác.
             </DialogDescription>
           </DialogHeader>
           {selectedRoom && (
@@ -501,10 +547,10 @@ export default function RoomsPage() {
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
-              Cancel
+              Hủy bỏ
             </Button>
             <Button variant="destructive" onClick={confirmDelete}>
-              Delete
+              Xóa
             </Button>
           </DialogFooter>
         </DialogContent>

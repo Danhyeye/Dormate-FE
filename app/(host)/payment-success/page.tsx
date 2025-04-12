@@ -105,7 +105,7 @@ export default function PaymentSuccessPage() {
                 asChild 
                 className="w-full sm:w-1/2 bg-green-600 hover:bg-green-700"
               >
-                <Link href="/host/post/create">
+                <Link href="/rooms">
                   <ArrowRight className="mr-2 h-4 w-4" /> Đăng tin ngay
                 </Link>
               </Button>

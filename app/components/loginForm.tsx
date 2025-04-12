@@ -127,12 +127,12 @@ export default function LoginForm() {
                 >
                   Mật khẩu
                 </Label>
-                <Link
+                {/* <Link
                   href="/forgot-password"
                   className="text-sm text-red-600 hover:text-red-800"
                 >
                   Quên mật khẩu?
-                </Link>
+                </Link> */}
               </div>
               <motion.div
                 whileFocus={{ scale: 1.01 }}

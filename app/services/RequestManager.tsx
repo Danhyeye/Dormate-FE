@@ -421,8 +421,6 @@ export const getRoomById = async (id: string): Promise<Room | null> => {
 export const createRoom = async (roomData: CreateRoomRequest): Promise<Room> => {
   const formData = new FormData();
   
-  
-  
   // Map properties to the expected capitalized format
   const fieldMapping: Record<string, string> = {
     name: "Name",
@@ -471,14 +469,24 @@ export const createRoom = async (roomData: CreateRoomRequest): Promise<Room> => 
   const token = localStorage.getItem("accessToken");
   console.log("Using token:", token ? "Bearer token found" : "No token available");
   
+  // Check token explicitly
+  if (!token) {
+    console.error("No authentication token available!");
+    throw new Error("Authentication token is missing. Please log in again.");
+  }
+  
   try {
     // Log the URL we're calling
     console.log(`Calling API at: ${API_URL_ROOMS}`);
+    console.log("FormData entries:");
+    for (const pair of formData.entries()) {
+      console.log(`${pair[0]}: ${pair[1]}`);
+    }
     
     const response = await axios.post<RoomResponse>(`${API_URL_ROOMS}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
-        "Authorization": token ? `Bearer ${token}` : "",
+        "Authorization": `Bearer ${token}`,
       },
     });
 
@@ -517,7 +525,23 @@ export const createRoom = async (roomData: CreateRoomRequest): Promise<Room> => 
     console.error("API returned unsuccessful response:", response.data);
     throw new Error("Failed to create room: " + (response.data.message || "Unknown error"));
   } catch (error: any) {
-    console.error("Error creating room:", error.response?.data || error.message);
+    console.error("Error creating room:", error);
+    
+    if (error.response) {
+      // Server responded with an error
+      console.error("Server error response:", {
+        status: error.response.status,
+        headers: error.response.headers,
+        data: error.response.data
+      });
+    } else if (error.request) {
+      // Request was made but no response received
+      console.error("No response received:", error.request);
+    } else {
+      // Error in setting up the request
+      console.error("Request setup error:", error.message);
+    }
+    
     throw error; // Keep the original error for better debugging
   }
 };

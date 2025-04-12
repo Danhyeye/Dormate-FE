@@ -123,35 +123,25 @@ export default function UsersPage() {
             orientation="vertical"
             className="mx-2 data-[orientation=vertical]:h-4"
           />
-          <h1 className="text-base font-medium">User Management</h1>
+          <h1 className="text-base font-medium">Quản lý người dùng</h1>
         </div>
       </header>
       
       <div className="container mx-auto py-6 px-4 md:px-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Users</h1>
+            <h1 className="text-2xl font-bold tracking-tight">Quản lý người dùng</h1>
             <p className="text-muted-foreground">
-              Manage system users and their permissions
+              Quản lý người dùng và quyền hạn của họ
             </p>
-          </div>
-          <div className="mt-4 md:mt-0 flex gap-2">
-            <Button variant="outline" size="sm">
-              <DownloadIcon className="h-4 w-4 mr-2" />
-              Export
-            </Button>
-            <Button size="sm">
-              <Plus className="h-4 w-4 mr-2" />
-              Add User
-            </Button>
           </div>
         </div>
         
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle>User Directory</CardTitle>
+            <CardTitle>Danh sách người dùng</CardTitle>
             <CardDescription>
-              View and manage all users in the system
+              Xem và quản lý tất cả người dùng trong hệ thống
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -159,7 +149,7 @@ export default function UsersPage() {
               <div className="relative flex-1">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search users..."
+                  placeholder="Tìm kiếm người dùng..."
                   className="pl-8"
                   value={searchTerm}
                   onChange={handleSearch}
@@ -168,17 +158,17 @@ export default function UsersPage() {
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" className="h-10">
                   <Filter className="h-4 w-4 mr-2" />
-                  Filter
+                  Lọc
                 </Button>
                 <Select defaultValue="all">
                   <SelectTrigger className="w-[160px]">
-                    <SelectValue placeholder="Select role" />
+                    <SelectValue placeholder="Chọn vai trò" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Roles</SelectItem>
+                    <SelectItem value="all">Tất cả vai trò</SelectItem>
                     <SelectItem value="admin">Admin</SelectItem>
-                    <SelectItem value="landlord">Landlord</SelectItem>
-                    <SelectItem value="user">User</SelectItem>
+                    <SelectItem value="landlord">Chủ nhà</SelectItem>
+                    <SelectItem value="user">Người dùng</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -210,16 +200,16 @@ export default function UsersPage() {
                         </div>
                       </TableHead>
                       <TableHead>Email</TableHead>
-                      <TableHead>Role</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                      <TableHead>Vai trò</TableHead>
+                      <TableHead>Trạng thái</TableHead>
+                      <TableHead className="text-right">Hành động</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {filteredUsers.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={6} className="text-center py-6 text-muted-foreground">
-                          No users found
+                          Không tìm thấy người dùng
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -365,15 +355,15 @@ export default function UsersPage() {
       <Dialog open={isUserDialogOpen} onOpenChange={setIsUserDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Edit User</DialogTitle>
+            <DialogTitle>Sửa người dùng</DialogTitle>
             <DialogDescription>
-              Update user information and permissions
+              Cập nhật thông tin và quyền hạn của người dùng
             </DialogDescription>
           </DialogHeader>
           {selectedUser && (
             <div className="space-y-4 py-2">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Name</label>
+                <label className="text-sm font-medium">Tên</label>
                 <Input defaultValue={selectedUser.fullName} />
               </div>
               <div className="space-y-2">
@@ -381,10 +371,10 @@ export default function UsersPage() {
                 <Input defaultValue={selectedUser.email} />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Role</label>
+                <label className="text-sm font-medium">Vai trò</label>
                 <Select defaultValue={selectedUser.rolesName[0]?.toLowerCase()}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select role" />
+                    <SelectValue placeholder="Chọn vai trò" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="admin">Admin</SelectItem>
@@ -394,10 +384,10 @@ export default function UsersPage() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Status</label>
+                <label className="text-sm font-medium">Trạng thái</label>
                 <Select defaultValue={selectedUser.status === 1 ? "active" : "inactive"}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select status" />
+                    <SelectValue placeholder="Chọn trạng thái" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="active">Active</SelectItem>
@@ -409,13 +399,13 @@ export default function UsersPage() {
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsUserDialogOpen(false)}>
-              Cancel
+              Hủy bỏ
             </Button>
             <Button onClick={() => {
-              toast.success("User updated successfully");
+              toast.success("Cập nhật người dùng thành công");
               setIsUserDialogOpen(false);
             }}>
-              Save Changes
+              Lưu thay đổi
             </Button>
           </DialogFooter>
         </DialogContent>

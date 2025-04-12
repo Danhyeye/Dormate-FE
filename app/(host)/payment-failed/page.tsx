@@ -109,7 +109,7 @@ export default function PaymentFailedPage() {
                 variant="outline" 
                 className="w-full sm:w-1/2"
               >
-                <Link href="/host/packages">
+                <Link href="/packages">
                   <ArrowLeft className="mr-2 h-4 w-4" /> Quay lại
                 </Link>
               </Button>
@@ -117,7 +117,7 @@ export default function PaymentFailedPage() {
                 asChild 
                 className="w-full sm:w-1/2 bg-red-600 hover:bg-red-700"
               >
-                <Link href="/host/packages">
+                <Link href="/packages">
                   <RefreshCw className="mr-2 h-4 w-4" /> Thử lại
                 </Link>
               </Button>

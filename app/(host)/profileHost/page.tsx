@@ -196,7 +196,7 @@ export default function ProfilePage() {
               orientation="vertical"
               className="mx-2 data-[orientation=vertical]:h-4"
             />
-            <h1 className="text-base font-medium">Profile</h1>
+            <h1 className="text-base font-medium">Hồ sơ của tôi</h1>
           </div>
         </header>
         
@@ -245,7 +245,7 @@ export default function ProfilePage() {
               orientation="vertical"
               className="mx-2 data-[orientation=vertical]:h-4"
             />
-            <h1 className="text-base font-medium">Profile</h1>
+            <h1 className="text-base font-medium">Hồ sơ của tôi</h1>
           </div>
         </header>
         
@@ -281,7 +281,7 @@ export default function ProfilePage() {
             orientation="vertical"
             className="mx-2 data-[orientation=vertical]:h-4"
           />
-          <h1 className="text-base font-medium">Profile</h1>
+          <h1 className="text-base font-medium">Hồ sơ của tôi</h1>
         </div>
       </header>
       
@@ -375,14 +375,14 @@ export default function ProfilePage() {
                     <Sheet open={isEditingProfile} onOpenChange={setIsEditingProfile}>
                       <SheetTrigger asChild>
                         <Button variant="outline" size="sm" onClick={() => setIsEditingProfile(true)}>
-                          <Edit className="h-3.5 w-3.5 mr-1.5" /> Edit Profile
+                          <Edit className="h-3.5 w-3.5 mr-1.5" /> Chỉnh sửa hồ sơ
                         </Button>
                       </SheetTrigger>
                       <SheetContent className="sm:max-w-md md:max-w-lg overflow-y-auto">
                         <SheetHeader>
-                          <SheetTitle>Edit Profile</SheetTitle>
+                          <SheetTitle>Chỉnh sửa hồ sơ</SheetTitle>
                           <SheetDescription>
-                            Make changes to your profile here. Click save when you're done.
+                            Chỉnh sửa thông tin hồ sơ ở đây. Nhấn lưu khi bạn hoàn tất.
                           </SheetDescription>
                         </SheetHeader>
                         <div className="mt-6">
@@ -391,7 +391,7 @@ export default function ProfilePage() {
                             onSuccess={() => {
                               setIsEditingProfile(false);
                               refetch();
-                              toast.success("Profile updated successfully");
+                                  toast.success("Hồ sơ đã được cập nhật thành công");
                             }}
                             onCancel={() => setIsEditingProfile(false)}
                           />
@@ -436,13 +436,13 @@ export default function ProfilePage() {
                     value="overview" 
                     className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none h-12 px-6"
                   >
-                    Overview
+                    Tổng quan
                   </TabsTrigger>
                   <TabsTrigger 
                     value="settings" 
                     className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none h-12 px-6"
                   >
-                    Settings
+                  Cài đặt
                   </TabsTrigger>
                   <TabsTrigger 
                     value="packages" 
@@ -462,7 +462,7 @@ export default function ProfilePage() {
                     <Card>
                       <CardHeader className="pb-2">
                         <CardTitle className="text-base font-medium flex items-center justify-between">
-                          <span>Contact Information</span>
+                          <span>Thông tin liên hệ</span>
                           <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setIsEditingProfile(true)}>
                             <Edit className="h-3.5 w-3.5" />
                           </Button>
@@ -483,7 +483,7 @@ export default function ProfilePage() {
                     <Card>
                       <CardHeader className="pb-2">
                         <CardTitle className="text-base font-medium flex items-center justify-between">
-                          <span>Personal Information</span>
+                          <span>Thông tin cá nhân</span>
                           <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setIsEditingProfile(true)}>
                             <Edit className="h-3.5 w-3.5" />
                           </Button>
@@ -504,7 +504,7 @@ export default function ProfilePage() {
                   <div className="lg:col-span-3 space-y-6">
                     <Card>
                       <CardHeader className="pb-2">
-                        <CardTitle className="text-base font-medium">Location</CardTitle>
+                        <CardTitle className="text-base font-medium">Địa chỉ</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-4">
@@ -515,7 +515,7 @@ export default function ProfilePage() {
                                   {profile.address}, {profile.ward}, {profile.district}, {profile.province}
                                 </>
                               ) : (
-                                "No address information provided."
+                                "Không có thông tin địa chỉ."
                               )}
                             </p>
                           </div>
@@ -533,13 +533,13 @@ export default function ProfilePage() {
                   <div className="lg:col-span-1 space-y-6">
                     <Card>
                       <CardHeader className="pb-2">
-                        <CardTitle className="text-base font-medium">Profile Settings</CardTitle>
-                        <CardDescription>Manage your public profile information</CardDescription>
+                        <CardTitle className="text-base font-medium">Cài đặt hồ sơ</CardTitle>
+                        <CardDescription>Quản lý thông tin hồ sơ công khai</CardDescription>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-4">
-                          <p className="text-sm text-muted-foreground">Update your profile information, avatar, and public details.</p>
-                          <Button variant="outline" onClick={() => setIsEditingProfile(true)}>Edit Profile</Button>
+                          <p className="text-sm text-muted-foreground">Cập nhật thông tin hồ sơ, ảnh đại diện và thông tin công khai.</p>
+                          <Button variant="outline" onClick={() => setIsEditingProfile(true)}>Chỉnh sửa hồ sơ</Button>
                         </div>
                       </CardContent>
                     </Card>
@@ -549,13 +549,13 @@ export default function ProfilePage() {
                   <div className="lg:col-span-3 space-y-6">
                     <Card>
                       <CardHeader className="pb-2">
-                        <CardTitle className="text-base font-medium">Security Settings</CardTitle>
-                        <CardDescription>Manage your account security</CardDescription>
+                        <CardTitle className="text-base font-medium">Cài đặt bảo mật</CardTitle>
+                        <CardDescription>Quản lý bảo mật tài khoản</CardDescription>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-4">
-                          <p className="text-sm text-muted-foreground">Change your password and manage security preferences.</p>
-                          <Button variant="outline" onClick={() => setIsPasswordDialogOpen(true)}>Change Password</Button>
+                          <p className="text-sm text-muted-foreground">Đổi mật khẩu và quản lý cài đặt bảo mật.</p>
+                          <Button variant="outline" onClick={() => setIsPasswordDialogOpen(true)}>Đổi mật khẩu</Button>
                         </div>
                       </CardContent>
                     </Card>
@@ -575,9 +575,9 @@ export default function ProfilePage() {
       <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Change Password</DialogTitle>
+            <DialogTitle>Đổi mật khẩu</DialogTitle>
             <DialogDescription>
-              Enter your current password and a new one to update your credentials.
+              Nhập mật khẩu hiện tại và một mật khẩu mới để cập nhật thông tin tài khoản.
             </DialogDescription>
           </DialogHeader>
           
@@ -588,9 +588,9 @@ export default function ProfilePage() {
                 name="currentPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Current Password</FormLabel>
+                    <FormLabel>Mật khẩu hiện tại</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="Enter current password" {...field} />
+                      <Input type="password" placeholder="Nhập mật khẩu hiện tại" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -602,9 +602,9 @@ export default function ProfilePage() {
                 name="newPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>New Password</FormLabel>
+                    <FormLabel>Mật khẩu mới</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="Enter new password" {...field} />
+                      <Input type="password" placeholder="Nhập mật khẩu mới" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -616,9 +616,9 @@ export default function ProfilePage() {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Confirm New Password</FormLabel>
+                      <FormLabel>Xác nhận mật khẩu mới</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="Confirm new password" {...field} />
+                      <Input type="password" placeholder="Xác nhận mật khẩu mới" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -631,16 +631,16 @@ export default function ProfilePage() {
                   variant="outline" 
                   onClick={() => setIsPasswordDialogOpen(false)}
                 >
-                  Cancel
+                  Hủy bỏ
                 </Button>
                 <Button type="submit" disabled={isChangingPassword}>
                   {isChangingPassword ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Changing...
+                      Đang thay đổi...
                     </>
                   ) : (
-                    "Change Password"
+                    "Đổi mật khẩu"
                   )}
                 </Button>
               </DialogFooter>

@@ -73,7 +73,7 @@ export const RoomDataColumn: ColumnDef<Room>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Name
+          Tên phòng
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
@@ -87,7 +87,7 @@ export const RoomDataColumn: ColumnDef<Room>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Price
+          Giá
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
@@ -110,7 +110,7 @@ export const RoomDataColumn: ColumnDef<Room>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Area
+          Diện tích
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
@@ -128,7 +128,7 @@ export const RoomDataColumn: ColumnDef<Room>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Province
+          Tỉnh/Thành phố
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
@@ -142,7 +142,7 @@ export const RoomDataColumn: ColumnDef<Room>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          District
+          Quận/Huyện
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
@@ -150,7 +150,7 @@ export const RoomDataColumn: ColumnDef<Room>[] = [
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: "Trạng thái",
     cell: ({ row }) => {
       const status = row.getValue("status") as RoomStatus
       return (
@@ -176,17 +176,17 @@ export const RoomDataColumn: ColumnDef<Room>[] = [
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuLabel>Hành động</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() => navigator.clipboard.writeText(room.id)}
               >
-                Copy room ID
+                Sao chép ID phòng
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => setIsDialogOpen(true)}>
-                View details
+                Xem chi tiết
               </DropdownMenuItem>
-              <DropdownMenuItem>Edit room</DropdownMenuItem>
+              <DropdownMenuItem>Sửa phòng</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <RoomDialog 

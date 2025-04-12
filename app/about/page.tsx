@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { CheckCircle2, Heart, Users, Award } from "lucide-react";
+import { CheckCircle2, Home, Users, Shield, Search, Building, Wallet } from "lucide-react";
 
 const AboutPage = () => {
   return (
@@ -34,8 +34,7 @@ const AboutPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              Khám phá câu chuyện về hành trình của chúng tôi và những giá trị
-              cốt lõi định hình nên dịch vụ lưu trú độc đáo này
+              Nền tảng kết nối người thuê và chủ nhà một cách hiệu quả, mang đến trải nghiệm tìm phòng và cho thuê phòng đơn giản, an toàn và tiện lợi
             </motion.p>
           </div>
         </div>
@@ -56,22 +55,13 @@ const AboutPage = () => {
               </h2>
               <div className="w-20 h-1 bg-red-600 mb-8"></div>
               <p className="text-gray-700 mb-6 leading-relaxed">
-                Dormate được thành lập vào năm 2025 với tầm nhìn đổi mới trải
-                nghiệm lưu trú tại Việt Nam. Chúng tôi bắt đầu với một khách sạn
-                nhỏ tại Quảng Ngãi và từng bước phát triển thành chuỗi khách sạn
-                cao cấp được yêu thích trên khắp cả nước.
+                Dormate được thành lập với sứ mệnh giải quyết những thách thức trong thị trường thuê phòng trọ tại Việt Nam. Chúng tôi nhận thấy việc tìm kiếm phòng trọ phù hợp thường gặp nhiều khó khăn, thiếu minh bạch và mất nhiều thời gian cho cả người thuê và chủ nhà.
               </p>
               <p className="text-gray-700 mb-6 leading-relaxed">
-                Điều làm nên sự khác biệt của Dormate chính là cam kết mang
-                đến dịch vụ cá nhân hóa, thiết kế độc đáo kết hợp hiện đại với
-                văn hóa địa phương, và sự tận tâm trong từng chi tiết.
+                Với nền tảng công nghệ hiện đại, Dormate kết nối trực tiếp người thuê phòng với chủ nhà, loại bỏ trung gian không cần thiết, giúp quá trình tìm kiếm và cho thuê phòng trở nên đơn giản, minh bạch và hiệu quả hơn.
               </p>
               <p className="text-gray-700 leading-relaxed">
-                Tên gọi Dormate lấy cảm hứng từ tình yêu (Dorm) với nghề và niềm
-                đam mê phục vụ khách hàng một cách tận tâm. Mỗi khách sạn trong
-                hệ thống Dormate đều được thiết kế để phản ánh vẻ đẹp của địa
-                phương, tạo nên không gian độc đáo cho du khách khám phá và thư
-                giãn.
+                Tên gọi Dormate - kết hợp từ "Dormitory" (ký túc xá) và "Mate" (bạn đồng hành) - thể hiện cam kết của chúng tôi trong việc trở thành người bạn đồng hành đáng tin cậy trên hành trình tìm kiếm tổ ấm của mỗi người.
               </p>
             </motion.div>
             <motion.div
@@ -82,7 +72,7 @@ const AboutPage = () => {
               transition={{ duration: 0.8 }}
             >
               <Image
-                src="/images/cover-page-aroma-04.png"
+                src="/images/logo.jpg"
                 alt="Our story"
                 width={1200}
                 height={800}
@@ -97,7 +87,7 @@ const AboutPage = () => {
       </section>
 
       {/* Our Values Section */}
-      <section className="py-20 ">
+      <section className="py-20">
         <div className="container mx-auto px-6">
           <motion.div
             className="text-center mb-16"
@@ -118,28 +108,28 @@ const AboutPage = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
-                icon: <Heart className="h-12 w-12 text-red-600" />,
-                title: "Hiếu khách",
+                icon: <CheckCircle2 className="h-12 w-12 text-red-600" />,
+                title: "Chính trực",
                 description:
-                  "Chúng tôi chào đón mỗi vị khách với sự ấm áp và thân thiện, tạo cảm giác như họ đang trở về nhà.",
-              },
-              {
-                icon: <Award className="h-12 w-12 text-red-600" />,
-                title: "Chất lượng",
-                description:
-                  "Chúng tôi cam kết mang đến trải nghiệm lưu trú cao cấp thông qua các tiêu chuẩn chất lượng nghiêm ngặt.",
+                  "Chúng tôi cam kết duy trì tính minh bạch và trung thực trong mọi giao dịch và thông tin.",
               },
               {
                 icon: <Users className="h-12 w-12 text-red-600" />,
-                title: "Cộng đồng",
+                title: "Kết nối",
                 description:
-                  "Chúng tôi tạo cơ hội việc làm và đóng góp vào phát triển kinh tế địa phương tại mỗi địa điểm.",
+                  "Chúng tôi tạo ra cầu nối hiệu quả giữa người thuê phòng và chủ nhà, xây dựng cộng đồng gắn kết.",
               },
               {
-                icon: <CheckCircle2 className="h-12 w-12 text-red-600" />,
-                title: "Trách nhiệm",
+                icon: <Building className="h-12 w-12 text-red-600" />,
+                title: "Chất lượng",
                 description:
-                  "Chúng tôi cam kết hoạt động kinh doanh có trách nhiệm, bảo vệ môi trường và tôn trọng văn hóa địa phương.",
+                  "Chúng tôi không ngừng nâng cao chất lượng dịch vụ để đảm bảo trải nghiệm tốt nhất cho người dùng.",
+              },
+              {
+                icon: <Wallet className="h-12 w-12 text-red-600" />,
+                title: "Giá trị",
+                description:
+                  "Chúng tôi tạo ra giá trị thực sự cho cả người thuê và chủ nhà thông qua nền tảng hiệu quả và tiết kiệm chi phí.",
               },
             ].map((value, index) => (
               <motion.div
@@ -172,16 +162,16 @@ const AboutPage = () => {
           priority={false}
           quality={85}
         />
-        {/* <div className="absolute inset-0 bg-red-600/50"></div> */}
+        <div className="absolute inset-0 bg-black/50 rounded-lg"></div>
         <div className="container relative z-10 mx-auto px-6 text-center">
           <motion.h2
-            className="text-3xl md:text-4xl font-bold text-red-600 mb-6"
+            className="text-3xl md:text-4xl font-bold text-white mb-6"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            Trải nghiệm sự khác biệt tại Dormate
+            Bắt đầu ngay hôm nay với Dormate
           </motion.h2>
           <motion.p
             className="max-w-3xl mx-auto mb-10 text-white/90"
@@ -190,15 +180,23 @@ const AboutPage = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            Đặt phòng ngay hôm nay và khám phá trải nghiệm lưu trú đẳng cấp tại
-            các khách sạn Dormate trên khắp Việt Nam
+            Dù bạn đang tìm kiếm phòng trọ lý tưởng hay muốn cho thuê phòng một cách hiệu quả, 
+            Dormate là nền tảng đáng tin cậy dành cho bạn. Tham gia cùng hàng nghìn người dùng khác 
+            trên hành trình tìm kiếm tổ ấm của mình!
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.4 }}
+            className="flex flex-col sm:flex-row justify-center gap-4"
           >
+            <a href="/posts" className="inline-flex items-center justify-center rounded-md bg-red-600 px-8 py-3 text-sm font-medium text-white shadow transition-colors hover:bg-red-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-red-700">
+              Tìm phòng ngay
+            </a>
+            <a href="/login" className="inline-flex items-center justify-center rounded-md border border-red-600 px-8 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-red-600/10 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-red-700">
+              Đăng phòng cho thuê
+            </a>
           </motion.div>
         </div>
       </section>

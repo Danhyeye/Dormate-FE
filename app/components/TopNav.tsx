@@ -122,7 +122,7 @@ const Navbar: React.FC = () => {
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
               <Image
-                src="/images/logo-amora-stay.png"
+                src="/images/logo.jpg"
                 alt="Dormate"
                 width={50}
                 height={50}
@@ -239,7 +239,7 @@ const Navbar: React.FC = () => {
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
               <Image
-                src="/images/logo-amora-stay.png"
+                src="/images/logo.jpg"
                 alt="Dormate"
                 width={40}
                 height={40}

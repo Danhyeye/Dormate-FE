@@ -46,7 +46,7 @@ export default function Page() {
             orientation="vertical"
             className="mx-2 data-[orientation=vertical]:h-4"
           />
-          <h1 className="text-base font-medium">Post Management</h1>
+          <h1 className="text-base font-medium">Quản lý bài viết</h1>
         </div>
       </header>
       <div className="flex flex-1 flex-col">
@@ -71,9 +71,9 @@ export default function Page() {
             <div className="h-full flex-1 flex-col space-y-8 p-8 md:flex">
               <div className="flex items-center justify-between space-y-2">
                 <div>
-                  <h2 className="text-2xl font-bold tracking-tight">Post Management</h2>
+                      <h2 className="text-2xl font-bold tracking-tight">Quản lý bài viết</h2>
                   <p className="text-muted-foreground">
-                    Here&apos;s a list of your posts!
+                    Đây là danh sách bài viết của bạn!
                   </p>
                 </div>
               </div>

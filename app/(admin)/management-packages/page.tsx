@@ -176,31 +176,31 @@ export default function PackagesPage() {
             orientation="vertical"
             className="mx-2 data-[orientation=vertical]:h-4"
           />
-          <h1 className="text-base font-medium">Package Management</h1>
+          <h1 className="text-base font-medium">Quản lý gói đăng ký</h1>
         </div>
       </header>
       
       <div className="container mx-auto py-6 px-4 md:px-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Packages</h1>
+            <h1 className="text-2xl font-bold tracking-tight">Gói đăng ký</h1>
             <p className="text-muted-foreground">
-              Manage subscription packages for hosts
+              Quản lý gói đăng ký cho chủ nhà
             </p>
           </div>
           <div className="mt-4 md:mt-0">
             <Button onClick={handleAddPackage}>
               <Plus className="h-4 w-4 mr-2" />
-              Add Package
+              Thêm gói đăng ký
             </Button>
           </div>
         </div>
         
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle>Package Directory</CardTitle>
+            <CardTitle>Danh sách gói đăng ký</CardTitle>
             <CardDescription>
-              View and manage all subscription packages
+              Xem và quản lý tất cả gói đăng ký
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -208,7 +208,7 @@ export default function PackagesPage() {
               <div className="relative">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search packages..."
+                  placeholder="Tìm kiếm gói đăng ký..."
                   className="pl-8"
                   value={searchTerm}
                   onChange={handleSearch}
@@ -235,20 +235,20 @@ export default function PackagesPage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Title</TableHead>
-                      <TableHead>Description</TableHead>
-                      <TableHead>Price</TableHead>
-                      <TableHead>Duration</TableHead>
-                      <TableHead>Posts</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                      <TableHead>Tên gói</TableHead>
+                      <TableHead>Mô tả</TableHead>
+                      <TableHead>Giá</TableHead>
+                      <TableHead>Thời hạn</TableHead>
+                      <TableHead>Số bài đăng</TableHead>
+                      <TableHead>Trạng thái</TableHead>
+                      <TableHead className="text-right">Action</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {filteredPackages.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={7} className="text-center py-6 text-muted-foreground">
-                          No packages found
+                          Không tìm thấy gói đăng ký
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -286,14 +286,14 @@ export default function PackagesPage() {
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                <DropdownMenuLabel>Action</DropdownMenuLabel>
                                 <DropdownMenuItem onClick={() => handleEditPackage(pkg)}>
                                   <Edit className="h-4 w-4 mr-2" />
-                                  Edit
+                                  Sửa
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => {}}>
                                   <Eye className="h-4 w-4 mr-2" />
-                                  View Details
+                                  Xem chi tiết
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
@@ -301,7 +301,7 @@ export default function PackagesPage() {
                                   onClick={() => handleDeletePackage(pkg)}
                                 >
                                   <Trash2 className="h-4 w-4 mr-2" />
-                                  Delete
+                                  Xóa
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
@@ -321,19 +321,19 @@ export default function PackagesPage() {
       <Dialog open={isPackageDialogOpen} onOpenChange={setIsPackageDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>{selectedPackage ? "Edit Package" : "Add New Package"}</DialogTitle>
+            <DialogTitle>{selectedPackage ? "Sửa gói đăng ký" : "Thêm gói đăng ký mới"}</DialogTitle>
             <DialogDescription>
-              {selectedPackage ? "Update package information" : "Create a new subscription package"}
+              {selectedPackage ? "Cập nhật thông tin gói đăng ký" : "Tạo gói đăng ký mới"}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmitPackage}>
             <div className="space-y-4 py-2">
               <div className="space-y-2">
-                <Label htmlFor="title">Package Title</Label>
+                <Label htmlFor="title">Tên gói</Label>
                 <Input
                   id="title"
                   name="title"
-                  placeholder="e.g. Basic Package"
+                  placeholder="Ví dụ: Gói cơ bản"
                   value={formData.title}
                   onChange={handleFormChange}
                   required
@@ -341,11 +341,11 @@ export default function PackagesPage() {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor="description">Mô tả</Label>
                 <Textarea
                   id="description"
                   name="description"
-                  placeholder="Brief description of the package features"
+                  placeholder="Mô tả tóm tắt các tính năng của gói đăng ký"
                   value={formData.description}
                   onChange={handleFormChange}
                   rows={3}
@@ -355,7 +355,7 @@ export default function PackagesPage() {
               
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="price">Price</Label>
+                  <Label htmlFor="price">Giá</Label>
                   <div className="relative">
                     <Input
                       id="price"
@@ -372,7 +372,7 @@ export default function PackagesPage() {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="duration">Duration (months)</Label>
+                  <Label htmlFor="duration">Thời hạn (tháng)</Label>
                   <Input
                     id="duration"
                     name="duration"
@@ -388,7 +388,7 @@ export default function PackagesPage() {
               
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="postTime">Number of Posts</Label>
+                  <Label htmlFor="postTime">Số bài đăng</Label>
                   <Input
                     id="postTime"
                     name="postTime"
@@ -402,7 +402,7 @@ export default function PackagesPage() {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="isHide">Status</Label>
+                  <Label htmlFor="isHide">Trạng thái</Label>
                   <select
                     id="isHide"
                     name="isHide"
@@ -419,10 +419,10 @@ export default function PackagesPage() {
             
             <DialogFooter className="mt-6">
               <Button variant="outline" type="button" onClick={() => setIsPackageDialogOpen(false)}>
-                Cancel
+                Hủy bỏ
               </Button>
               <Button type="submit">
-                {selectedPackage ? "Update Package" : "Create Package"}
+                {selectedPackage ? "Cập nhật gói" : "Tạo gói"}
               </Button>
             </DialogFooter>
           </form>
@@ -433,9 +433,9 @@ export default function PackagesPage() {
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Package</DialogTitle>
+            <DialogTitle>Xóa gói đăng ký</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this package? This action cannot be undone.
+              Bạn có chắc chắn muốn xóa gói đăng ký này? Hành động này không thể hoàn tác.
             </DialogDescription>
           </DialogHeader>
           {selectedPackage && (
@@ -446,10 +446,10 @@ export default function PackagesPage() {
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
-              Cancel
+              Hủy bỏ
             </Button>
             <Button variant="destructive" onClick={confirmDelete}>
-              Delete
+              Xóa
             </Button>
           </DialogFooter>
         </DialogContent>

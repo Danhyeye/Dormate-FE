@@ -17,8 +17,6 @@ const HeroSection = () => {
             transition={{ duration: 0.8 }}
           >
             Dormate
-            <br />
-            Stay
           </motion.h1>
 
           <motion.div
